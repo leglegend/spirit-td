@@ -9,7 +9,9 @@ import {
   Vec3,
   Quat,
   Prefab,
-  instantiate
+  instantiate,
+  Collider,
+  ITriggerEvent
 } from 'cc'
 const { ccclass, property } = _decorator
 
@@ -76,6 +78,13 @@ export class MonsterController extends Component {
   start() {
     // input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this)
     this.onMouseUp()
+    let collider = this.getComponent(Collider)
+    //console.log(collider)
+    collider.on('onCollisionEnter', this.onCollisionEnter, this)
+  }
+
+  private onCollisionEnter(other) {
+    // console.log(other)
   }
   onMouseUp() {
     this._startJump = true

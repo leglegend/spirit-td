@@ -94,12 +94,10 @@ export class Player extends Component {
             new Vec3(curPos.x, bullet.getPosition().y, curPos.z)
           )
           bullet.setRotation(that.node.getRotation())
-          console.log('attack')
           let curRot = Quat.toEuler(
             that.node.getPosition(),
             that.node.getRotation()
           )
-          console.log(curRot.y)
         } else {
           that.unschedule(this)
         }

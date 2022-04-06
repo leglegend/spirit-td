@@ -1,4 +1,12 @@
-import { _decorator, Component, Node, Vec3, Quat } from 'cc'
+import {
+  _decorator,
+  Component,
+  Node,
+  Vec3,
+  Quat,
+  BoxCollider,
+  ITriggerEvent
+} from 'cc'
 const { ccclass, property } = _decorator
 
 @ccclass('BulletController')
@@ -23,12 +31,20 @@ export class BulletController extends Component {
     this._targetPos = new Vec3(targetX, this._curPos.y, targetZ)
     this.XLong = targetX - this._curPos.x
     this.ZLong = targetZ - this._curPos.z
+
+    let collider = this.node.getComponent(BoxCollider)
+    console.log(collider)
+    collider.on('onTriggerStay', this.onTriggerStay, this)
+  }
+
+  private onTriggerStay(event: ITriggerEvent) {
+    console.log(event)
+    this.node.destroy()
   }
 
   update(deltaTime: number) {
     this.time += deltaTime
     if (this.time < this.attackLong / this.speed) {
-      console.log(this.time)
       this._deltaPos.x = this.XLong * this.speed * deltaTime
       this._deltaPos.z = this.ZLong * this.speed * deltaTime
       Vec3.add(this._curPos, this._curPos, this._deltaPos)
