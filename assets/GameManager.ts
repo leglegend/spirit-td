@@ -34,11 +34,14 @@ export class GameManager extends Component {
   @property(Node)
   public targetNode!: Node
 
+  public player!: Node
+
   private _ray: geometry.Ray = new geometry.Ray()
   start() {
     this.schedule(this.createMonster, 2, 3)
     // this.createMonster()
     input.on(Input.EventType.TOUCH_START, this.onTouchStart, this)
+    input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
   }
   onTouchStart(event) {
     const touch = event.touch!
@@ -53,9 +56,33 @@ export class GameManager extends Component {
       for (let i = 0; i < raycastResults.length; i++) {
         const item = raycastResults[i]
         console.log(item.hitPoint)
-        let monster = instantiate(this.monster)
-        this.node.addChild(monster)
-        monster.setPosition(item.hitPoint)
+        this.player = instantiate(this.monster)
+        this.node.addChild(this.player)
+        this.player.setPosition(item.hitPoint)
+        if (item.collider.node == this.targetNode) {
+          console.log('raycast hit the target node !')
+          break
+        }
+      }
+    } else {
+      console.log('raycast does not hit the target node !')
+    }
+  }
+
+  onTouchMove(event) {
+    const touch = event.touch!
+    this.cameraCom.screenPointToRay(
+      touch.getLocationX(),
+      touch.getLocationY(),
+      this._ray
+    )
+    console.log(this._ray)
+    if (PhysicsSystem.instance.raycast(this._ray)) {
+      const raycastResults = PhysicsSystem.instance.raycastResults
+      for (let i = 0; i < raycastResults.length; i++) {
+        const item = raycastResults[i]
+        console.log(item.hitPoint)
+        this.player.setPosition(item.hitPoint)
         if (item.collider.node == this.targetNode) {
           console.log('raycast hit the target node !')
           break
