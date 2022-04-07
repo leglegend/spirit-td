@@ -1,4 +1,15 @@
-import { _decorator, Component, Node, Prefab, instantiate } from 'cc'
+import {
+  _decorator,
+  Component,
+  Node,
+  Prefab,
+  instantiate,
+  input,
+  Camera,
+  geometry,
+  PhysicsSystem,
+  Input
+} from 'cc'
 const { ccclass, property } = _decorator
 
 /**
@@ -17,11 +28,44 @@ const { ccclass, property } = _decorator
 export class GameManager extends Component {
   @property({ type: Prefab })
   public monster: Prefab | null = null
+  @property(Camera)
+  readonly cameraCom!: Camera
 
+  @property(Node)
+  public targetNode!: Node
+
+  private _ray: geometry.Ray = new geometry.Ray()
   start() {
     this.schedule(this.createMonster, 2, 3)
     // this.createMonster()
+    input.on(Input.EventType.TOUCH_START, this.onTouchStart, this)
   }
+  onTouchStart(event) {
+    const touch = event.touch!
+    this.cameraCom.screenPointToRay(
+      touch.getLocationX(),
+      touch.getLocationY(),
+      this._ray
+    )
+    console.log(this._ray)
+    if (PhysicsSystem.instance.raycast(this._ray)) {
+      const raycastResults = PhysicsSystem.instance.raycastResults
+      for (let i = 0; i < raycastResults.length; i++) {
+        const item = raycastResults[i]
+        console.log(item.hitPoint)
+        let monster = instantiate(this.monster)
+        this.node.addChild(monster)
+        monster.setPosition(item.hitPoint)
+        if (item.collider.node == this.targetNode) {
+          console.log('raycast hit the target node !')
+          break
+        }
+      }
+    } else {
+      console.log('raycast does not hit the target node !')
+    }
+  }
+
   createMonster() {
     let monster = instantiate(this.monster)
     this.node.addChild(monster)

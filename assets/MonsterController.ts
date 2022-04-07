@@ -57,6 +57,8 @@ export class MonsterController extends Component {
   // 角色目标位置
   private _targetRot: Vec3 = new Vec3()
 
+  public HP: number = 2
+
   private curRoad: number = 0
   private roads = [
     [-0.5, 2],
@@ -64,6 +66,7 @@ export class MonsterController extends Component {
     [4.5, -3.5]
   ]
 
+  private isDie: boolean = false
   // private roads = [
   //   [0, 2],
   //   [2, 2],
@@ -77,14 +80,21 @@ export class MonsterController extends Component {
   public CocosAnim: SkeletalAnimation | null = null
   start() {
     // input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this)
-    this.onMouseUp()
-    let collider = this.getComponent(Collider)
+    // this.onMouseUp()
+    let collider = this.node.children[0].getComponent(Collider)
     //console.log(collider)
-    collider.on('onCollisionEnter', this.onCollisionEnter, this)
+    collider.on('onTriggerStay', this.onTriggerStay, this)
   }
 
-  private onCollisionEnter(other) {
-    // console.log(other)
+  private onTriggerStay(event: ITriggerEvent) {
+    this.HP -= 1
+    if (this.HP > 0) return
+    console.log(event)
+    this.CocosAnim.play('die')
+    setTimeout(() => {
+      this.node.destroy()
+    }, this.CocosAnim.getState('die').duration * 1000)
+    // this.node.destroy()
   }
   onMouseUp() {
     this._startJump = true
@@ -146,6 +156,7 @@ export class MonsterController extends Component {
     }
   }
   update(deltaTime: number) {
+    if (this.HP == 0) return
     if (this._startJump) {
       this._curJumpTime += deltaTime
       if (this._curJumpTime > this._curRoadTime) {

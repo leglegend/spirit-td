@@ -33,12 +33,11 @@ export class BulletController extends Component {
     this.ZLong = targetZ - this._curPos.z
 
     let collider = this.node.getComponent(BoxCollider)
-    console.log(collider)
     collider.on('onTriggerStay', this.onTriggerStay, this)
   }
 
   private onTriggerStay(event: ITriggerEvent) {
-    console.log(event)
+    // console.log(event)
     this.node.destroy()
   }
 

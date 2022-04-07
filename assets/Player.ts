@@ -14,6 +14,7 @@ import {
   macro
 } from 'cc'
 import { GameManager } from './GameManager'
+import { MonsterController } from './MonsterController'
 const { ccclass, property } = _decorator
 
 @ccclass('Player')
@@ -45,7 +46,10 @@ export class Player extends Component {
       let dx = Math.abs(_targetPos.x - this._curPos.x)
       let dz = Math.abs(_targetPos.z - this._curPos.z)
       let dis = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2))
-      if (dis < 3 && (lessLong == null || lessLong > dis)) lastMonster = monster
+      let msCtr = monster.getComponent(MonsterController)
+
+      if (dis < 3 && msCtr.HP > 0 && (lessLong == null || lessLong > dis))
+        lastMonster = monster
     }
     if (lastMonster) {
       let curRot = Quat.toEuler(
@@ -61,12 +65,13 @@ export class Player extends Component {
       )
       if (this.playerState == 'idle') {
         this.playerState = 'attack'
-        this.CocosAnim.play(this.playerState)
+        this.CocosAnim.crossFade(this.playerState)
         this.beginAttack()
       }
     } else if (this.playerState == 'attack') {
       this.playerState = 'idle'
       this.CocosAnim.play(this.playerState)
+      this.unschedule(this.doAttack)
     }
   }
   calcNodeRot(curRot: Vec3, curPos: Vec3, targetPos: Vec3) {
@@ -83,28 +88,19 @@ export class Player extends Component {
   }
 
   beginAttack() {
-    let that = this
     this.schedule(
-      function () {
-        if (that.playerState == 'attack') {
-          let bullet = instantiate(this.bullet)
-          bullet.setParent(director.getScene())
-          let curPos = that.node.getPosition()
-          bullet.setPosition(
-            new Vec3(curPos.x, bullet.getPosition().y, curPos.z)
-          )
-          bullet.setRotation(that.node.getRotation())
-          let curRot = Quat.toEuler(
-            that.node.getPosition(),
-            that.node.getRotation()
-          )
-        } else {
-          that.unschedule(this)
-        }
-      },
+      this.doAttack,
       this.attackTime,
       macro.REPEAT_FOREVER,
       (2 * this.attackTime) / 3
     )
+  }
+
+  doAttack() {
+    let bullet = instantiate(this.bullet)
+    bullet.setParent(director.getScene())
+    let curPos = this.node.getPosition()
+    bullet.setPosition(new Vec3(curPos.x, bullet.getPosition().y, curPos.z))
+    bullet.setRotation(this.node.getRotation())
   }
 }
