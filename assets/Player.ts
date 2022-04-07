@@ -23,35 +23,53 @@ export class Player extends Component {
   public body: Node | null = null
   @property({ type: SkeletalAnimation })
   public CocosAnim: SkeletalAnimation | null = null
-  @property({ type: GameManager })
-  public gameManager: GameManager | null = null
+
+  public gameManager: Node | null = null
 
   @property({ type: Prefab })
   public bullet: Prefab | null = null
 
   private attackTime: number | null = null
   private playerState: string = 'idle'
+  private isBegin: boolean = false
+
+  public lastMonster: Node | null = null
+
   // 当前角色位置
   private _curPos: Vec3 = new Vec3(0, 0, 0)
-  start() {
+  start() {}
+
+  public begin() {
     this.CocosAnim.play(this.playerState)
     this._curPos = this.node.getPosition()
+    this.gameManager = director.getScene().getChildByName('GameManager')
     this.attackTime = this.CocosAnim.getState('attack').duration
+    this.isBegin = true
   }
+
   update(deltaTime: number) {
+    if (!this.isBegin) return
     let lastMonster = null
     let lessLong = null
-    for (let monster of this.gameManager.node.children) {
-      let _targetPos = monster.getPosition()
-      let dx = Math.abs(_targetPos.x - this._curPos.x)
-      let dz = Math.abs(_targetPos.z - this._curPos.z)
-      let dis = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2))
-      let msCtr = monster.getComponent(MonsterController)
+    if (!this.gameManager.children) return
+    if (
+      this.lastMonster &&
+      calcDis(this.lastMonster, this._curPos) < 3 &&
+      this.lastMonster.getComponent(MonsterController).HP > 0
+    )
+      lastMonster = this.lastMonster
+    else {
+      for (let monster of this.gameManager.children) {
+        let dis = calcDis(monster, this._curPos)
+        let msCtr = monster.getComponent(MonsterController)
 
-      if (dis < 3 && msCtr.HP > 0 && (lessLong == null || lessLong > dis))
-        lastMonster = monster
+        if (dis < 3 && msCtr.HP > 0 && (lessLong == null || lessLong > dis))
+          lastMonster = monster
+      }
     }
+
     if (lastMonster) {
+      this.lastMonster = lastMonster
       let curRot = Quat.toEuler(
         this.node.getPosition(),
         this.node.getRotation()
@@ -70,8 +88,17 @@ export class Player extends Component {
       }
     } else if (this.playerState == 'attack') {
       this.playerState = 'idle'
+      this.lastMonster = null
       this.CocosAnim.play(this.playerState)
       this.unschedule(this.doAttack)
+    }
+
+    function calcDis(monster: Node, _curPos: Vec3) {
+      let _targetPos = monster.getPosition()
+      let dx = Math.abs(_targetPos.x - _curPos.x)
+      let dz = Math.abs(_targetPos.z - _curPos.z)
+      let dis = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2))
+      return dis
     }
   }
   calcNodeRot(curRot: Vec3, curPos: Vec3, targetPos: Vec3) {

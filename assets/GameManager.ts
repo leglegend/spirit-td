@@ -8,8 +8,10 @@ import {
   Camera,
   geometry,
   PhysicsSystem,
-  Input
+  Input,
+  director
 } from 'cc'
+import { Player } from './Player'
 const { ccclass, property } = _decorator
 
 /**
@@ -28,6 +30,8 @@ const { ccclass, property } = _decorator
 export class GameManager extends Component {
   @property({ type: Prefab })
   public monster: Prefab | null = null
+  @property({ type: Prefab })
+  public playerPrefab: Prefab | null = null
   @property(Camera)
   readonly cameraCom!: Camera
 
@@ -38,12 +42,14 @@ export class GameManager extends Component {
 
   private _ray: geometry.Ray = new geometry.Ray()
   start() {
-    this.schedule(this.createMonster, 2, 3)
-    // this.createMonster()
     input.on(Input.EventType.TOUCH_START, this.onTouchStart, this)
-    input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
+    input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this)
+  }
+  onGameBegin() {
+    this.schedule(this.createMonster, 2, 3)
   }
   onTouchStart(event) {
+    input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
     const touch = event.touch!
     this.cameraCom.screenPointToRay(
       touch.getLocationX(),
@@ -56,13 +62,9 @@ export class GameManager extends Component {
       for (let i = 0; i < raycastResults.length; i++) {
         const item = raycastResults[i]
         console.log(item.hitPoint)
-        this.player = instantiate(this.monster)
-        this.node.addChild(this.player)
+        this.player = instantiate(this.playerPrefab)
+        this.player.setParent(director.getScene())
         this.player.setPosition(item.hitPoint)
-        if (item.collider.node == this.targetNode) {
-          console.log('raycast hit the target node !')
-          break
-        }
       }
     } else {
       console.log('raycast does not hit the target node !')
@@ -92,7 +94,11 @@ export class GameManager extends Component {
       console.log('raycast does not hit the target node !')
     }
   }
-
+  onTouchEnd() {
+    input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
+    this.player.getComponent(Player).begin()
+    this.player = null
+  }
   createMonster() {
     let monster = instantiate(this.monster)
     this.node.addChild(monster)

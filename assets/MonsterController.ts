@@ -80,7 +80,7 @@ export class MonsterController extends Component {
   public CocosAnim: SkeletalAnimation | null = null
   start() {
     // input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this)
-    // this.onMouseUp()
+    this.onMouseUp()
     let collider = this.node.children[0].getComponent(Collider)
     //console.log(collider)
     collider.on('onTriggerStay', this.onTriggerStay, this)
