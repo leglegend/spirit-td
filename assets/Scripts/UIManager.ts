@@ -2,26 +2,38 @@ import {
   _decorator,
   Component,
   Node,
-  Prefab,
-  instantiate,
-  input,
-  Camera,
+  view,
   geometry,
+  Camera,
+  Prefab,
   PhysicsSystem,
+  instantiate,
+  director,
+  input,
   Input,
-  director
+  UITransform,
+  ScrollView
 } from 'cc'
 import { Player } from './Player'
 const { ccclass, property } = _decorator
 
-@ccclass('GameManager')
-export class GameManager extends Component {
-  @property({ type: Prefab })
-  public monster: Prefab | null = null
+@ccclass('UIManager')
+export class UIManager extends Component {
+  @property({ type: Node })
+  private rightMenu: Node | null = null
+  @property({ type: Node })
+  private background: Node | null = null
+  @property({ type: Node })
+  private plane: Node | null = null
+  @property({ type: Node })
+  private scrollView: Node | null = null
+
   @property({ type: Prefab })
   public playerPrefab: Prefab | null = null
   @property(Camera)
   readonly cameraCom!: Camera
+
+  private uiTransform
 
   @property(Node)
   public targetNode!: Node
@@ -30,23 +42,27 @@ export class GameManager extends Component {
 
   private _ray: geometry.Ray = new geometry.Ray()
   start() {
-    input.on(Input.EventType.TOUCH_START, this.onTouchStart, this)
-    input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this)
+    // console.log(view.getVisibleSize())
+    this.plane.on(Node.EventType.TOUCH_START, this.toConsole, this)
+    this.plane.on(Node.EventType.TOUCH_MOVE, this.toConsole, this)
+    this.plane.on(Node.EventType.TOUCH_END, this.toConsole, this)
+    this.uiTransform = this.plane.getComponent(UITransform)
+    // ScrollView.EventType
+    this.scrollView.getComponent(ScrollView).cancelInnerEvents = false
   }
-  onGameBegin() {
-    this.schedule(this.createMonster, 2, 3)
+  toConsole(event) {
+    console.log(event)
+    this.uiTransform.width = 600
   }
   onTouchStart(event) {
-    input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
-    console.log(event)
-    return
+    this.plane.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
+    this.uiTransform.width = 600
     const touch = event.touch!
     this.cameraCom.screenPointToRay(
       touch.getLocationX(),
       touch.getLocationY(),
       this._ray
     )
-    console.log(this._ray)
     if (PhysicsSystem.instance.raycast(this._ray)) {
       const raycastResults = PhysicsSystem.instance.raycastResults
       for (let i = 0; i < raycastResults.length; i++) {
@@ -56,41 +72,31 @@ export class GameManager extends Component {
         this.player.setPosition(item.hitPoint)
         break
       }
-    } else {
-      console.log('raycast does not hit the target node !')
     }
   }
 
   onTouchMove(event) {
-    console.log(event)
-    return
     const touch = event.touch!
     this.cameraCom.screenPointToRay(
       touch.getLocationX(),
       touch.getLocationY(),
       this._ray
     )
-    console.log(this._ray)
     if (PhysicsSystem.instance.raycast(this._ray)) {
       const raycastResults = PhysicsSystem.instance.raycastResults
       for (let i = 0; i < raycastResults.length; i++) {
         const item = raycastResults[i]
-        console.log(item.hitPoint)
         this.player.setPosition(item.hitPoint)
         if (item.collider.node == this.targetNode) {
-          console.log('raycast hit the target node !')
           break
         }
       }
-    } else {
-      console.log('raycast does not hit the target node !')
     }
   }
   onTouchEnd(event) {
-    console.log(event)
-    return
+    this.uiTransform.width = 300
     const touch = event.touch!
-    input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
+    this.plane.off(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
     this.cameraCom.screenPointToRay(
       touch.getLocationX(),
       touch.getLocationY(),
@@ -111,22 +117,7 @@ export class GameManager extends Component {
       this.player = null
     }
   }
-  createMonster() {
-    let monster = instantiate(this.monster)
-    this.node.addChild(monster)
-  }
   // update (deltaTime: number) {
   //     // [4]
   // }
 }
-
-/**
- * [1] Class member could be defined like this.
- * [2] Use `property` decorator if your want the member to be serializable.
- * [3] Your initialization goes here.
- * [4] Your update function goes here.
- *
- * Learn more about scripting: https://docs.cocos.com/creator/3.4/manual/zh/scripting/
- * Learn more about CCClass: https://docs.cocos.com/creator/3.4/manual/zh/scripting/decorator.html
- * Learn more about life-cycle callbacks: https://docs.cocos.com/creator/3.4/manual/zh/scripting/life-cycle-callbacks.html
- */
