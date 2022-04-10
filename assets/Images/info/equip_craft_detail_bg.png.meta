@@ -1,0 +1,74 @@
+{
+  "ver": "1.0.22",
+  "importer": "image",
+  "imported": true,
+  "uuid": "b345e444-0f45-4333-9dca-05034581e6f7",
+  "files": [
+    ".png",
+    ".json"
+  ],
+  "subMetas": {
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "b345e444-0f45-4333-9dca-05034581e6f7@6c48a",
+      "displayName": "equip_craft_detail_bg",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "clamp-to-edge",
+        "wrapModeT": "clamp-to-edge",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "b345e444-0f45-4333-9dca-05034581e6f7"
+      },
+      "ver": "1.0.21",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "b345e444-0f45-4333-9dca-05034581e6f7@f9941",
+      "displayName": "equip_craft_detail_bg",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 0,
+        "trimY": 0,
+        "width": 342,
+        "height": 153,
+        "rawWidth": 342,
+        "rawHeight": 153,
+        "borderTop": 28,
+        "borderBottom": 32,
+        "borderLeft": 30,
+        "borderRight": 38,
+        "packable": true,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "b345e444-0f45-4333-9dca-05034581e6f7@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.9",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "hasAlpha": true,
+    "type": "sprite-frame",
+    "redirect": "b345e444-0f45-4333-9dca-05034581e6f7@f9941"
+  }
+}

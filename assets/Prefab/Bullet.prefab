@@ -174,7 +174,7 @@
       "__id__": 10
     },
     "_group": 1,
-    "_type": 2,
+    "_type": 4,
     "_mass": 1,
     "_allowSleep": true,
     "_linearDamping": 0.1,

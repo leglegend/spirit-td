@@ -2,7 +2,7 @@
   "ver": "1.0.22",
   "importer": "image",
   "imported": true,
-  "uuid": "dc8fbdc4-e0dc-4d9d-87e9-d3527aab590d",
+  "uuid": "6af3f93c-3046-495b-b058-05b890aededf",
   "files": [
     ".png",
     ".json"
@@ -10,8 +10,8 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "dc8fbdc4-e0dc-4d9d-87e9-d3527aab590d@6c48a",
-      "displayName": "button",
+      "uuid": "6af3f93c-3046-495b-b058-05b890aededf@6c48a",
+      "displayName": "g_skill_huangzhong",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "dc8fbdc4-e0dc-4d9d-87e9-d3527aab590d"
+        "imageUuidOrDatabaseUri": "6af3f93c-3046-495b-b058-05b890aededf"
       },
       "ver": "1.0.21",
       "imported": true,
@@ -33,8 +33,8 @@
     },
     "f9941": {
       "importer": "sprite-frame",
-      "uuid": "dc8fbdc4-e0dc-4d9d-87e9-d3527aab590d@f9941",
-      "displayName": "button",
+      "uuid": "6af3f93c-3046-495b-b058-05b890aededf@f9941",
+      "displayName": "g_skill_huangzhong",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
@@ -45,17 +45,17 @@
         "offsetY": 0,
         "trimX": 0,
         "trimY": 0,
-        "width": 134,
-        "height": 76,
-        "rawWidth": 134,
-        "rawHeight": 76,
+        "width": 72,
+        "height": 72,
+        "rawWidth": 72,
+        "rawHeight": 72,
         "borderTop": 0,
         "borderBottom": 0,
         "borderLeft": 0,
         "borderRight": 0,
         "packable": true,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "dc8fbdc4-e0dc-4d9d-87e9-d3527aab590d@6c48a",
+        "imageUuidOrDatabaseUri": "6af3f93c-3046-495b-b058-05b890aededf@6c48a",
         "atlasUuid": ""
       },
       "ver": "1.0.9",
@@ -69,6 +69,6 @@
   "userData": {
     "hasAlpha": true,
     "type": "sprite-frame",
-    "redirect": "dc8fbdc4-e0dc-4d9d-87e9-d3527aab590d@f9941"
+    "redirect": "6af3f93c-3046-495b-b058-05b890aededf@f9941"
   }
 }

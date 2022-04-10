@@ -8,7 +8,10 @@ import {
   Prefab,
   instantiate,
   director,
-  macro
+  macro,
+  Collider,
+  Material,
+  MeshRenderer
 } from 'cc'
 import { MonsterController } from './MonsterController'
 const { ccclass, property } = _decorator
@@ -31,6 +34,12 @@ export class Player extends Component {
   @property({ type: Prefab })
   public bullet: Prefab | null = null
 
+  @property({ type: Material })
+  public errorMaterial: Material | null = null
+
+  @property({ type: Material })
+  public successMaterial: Material | null = null
+
   private gameManager = null
   private playerState: string = PlayerState.PLACE
 
@@ -39,16 +48,44 @@ export class Player extends Component {
   private attackRange: number = 3
   private attackTime: number = 0
 
+  private triggerNumber: number = 0
+
+  private collider: Collider | null = null
+
+  private range: Node | null = null
+
   // 当前角色位置
   private _curPos: Vec3 = new Vec3(0, 0, 0)
   start() {
-    let scale = this.node.getChildByName('range').getScale()
-    scale.x = this.attackRange / 5
-    scale.z = this.attackRange / 5
-    this.node.getChildByName('range').setScale(scale)
+    this.range = this.node.getChildByName('range')
+    let scale = this.range.getScale()
+    scale.x = (this.attackRange / 5) * scale.x
+    scale.z = (this.attackRange / 5) * scale.z
+    this.range.setScale(scale)
+
+    this.collider = this.node.getChildByName('area').getComponent(Collider)
+    this.collider.setGroup(2)
+    this.collider.setMask(2)
+    this.collider.on('onTriggerEnter', this.onTriggerEnter, this)
+    this.collider.on('onTriggerExit', this.onTriggerExit, this)
+    this.canSpace(this.triggerNumber == 0)
+  }
+  onTriggerEnter() {
+    this.triggerNumber += 1
+    this.canSpace(this.triggerNumber == 0)
+  }
+  onTriggerExit() {
+    this.triggerNumber -= 1
+    this.canSpace(this.triggerNumber == 0)
   }
 
   public begin() {
+    if (this.triggerNumber >= 1) {
+      this.node.destroy()
+      return
+    }
+    this.collider.off('onTriggerEnter', this.onTriggerEnter, this)
+    this.collider.off('onTriggerExit', this.onTriggerExit, this)
     this.changeState(PlayerState.IDLE)
     this._curPos = this.node.getPosition()
     this.gameManager = director.getScene().getChildByName('GameManager')
@@ -58,6 +95,20 @@ export class Player extends Component {
     // setTimeout(() => {
     //   this.changeState(PlayerState.IDLE)
     // }, this.getAnimationTime(PlayerState.PLACE))
+  }
+
+  noSpace() {
+    let rangePos = this.node.getChildByName('range').getPosition()
+    rangePos.y = 0.1
+    this.node.getChildByName('range').setPosition(rangePos)
+  }
+
+  canSpace(can) {
+    if (can) {
+      this.range.getComponent(MeshRenderer).setMaterial(this.successMaterial, 0)
+    } else {
+      this.range.getComponent(MeshRenderer).setMaterial(this.errorMaterial, 0)
+    }
   }
 
   changeState(state: string) {

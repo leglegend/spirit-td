@@ -180,12 +180,12 @@
       ],
       "subMetas": {}
     },
-    "6b2b2": {
+    "4c6fd": {
       "importer": "gltf-scene",
-      "uuid": "f984fad7-d64c-40cb-aaa2-f7be125b734f@6b2b2",
+      "uuid": "f984fad7-d64c-40cb-aaa2-f7be125b734f@4c6fd",
       "displayName": "",
-      "id": "6b2b2",
-      "name": "boomDragonAll.FBX.prefab",
+      "id": "4c6fd",
+      "name": "boomDragonAll.prefab",
       "userData": {
         "gltfIndex": 0
       },
@@ -239,7 +239,7 @@
         ]
       }
     ],
-    "redirect": "f984fad7-d64c-40cb-aaa2-f7be125b734f@6b2b2",
+    "redirect": "f984fad7-d64c-40cb-aaa2-f7be125b734f@4c6fd",
     "assetFinder": {
       "meshes": [
         "f984fad7-d64c-40cb-aaa2-f7be125b734f@c82ec"
@@ -252,7 +252,7 @@
         "f984fad7-d64c-40cb-aaa2-f7be125b734f@ea6e2"
       ],
       "scenes": [
-        "f984fad7-d64c-40cb-aaa2-f7be125b734f@6b2b2"
+        "f984fad7-d64c-40cb-aaa2-f7be125b734f@4c6fd"
       ]
     },
     "dumpMaterials": false,

@@ -12,7 +12,9 @@ import {
   input,
   Input,
   UITransform,
-  ScrollView
+  ScrollView,
+  BoxCollider,
+  Vec3
 } from 'cc'
 import { Player } from './Player'
 const { ccclass, property } = _decorator
@@ -22,18 +24,20 @@ export class UIManager extends Component {
   @property({ type: Node })
   private rightMenu: Node | null = null
   @property({ type: Node })
+  private leftMenu: Node | null = null
+  @property({ type: Node })
   private background: Node | null = null
   @property({ type: Node })
   private plane: Node | null = null
-  @property({ type: Node })
-  private scrollView: Node | null = null
 
   @property({ type: Prefab })
   public playerPrefab: Prefab | null = null
   @property(Camera)
-  readonly cameraCom!: Camera
+  public cameraCom!: Camera
 
   private uiTransform
+  private formWidth: number = 0
+  private formHeight: number = 0
 
   @property(Node)
   public targetNode!: Node
@@ -42,21 +46,50 @@ export class UIManager extends Component {
 
   private _ray: geometry.Ray = new geometry.Ray()
   start() {
-    // console.log(view.getVisibleSize())
-    this.plane.on(Node.EventType.TOUCH_START, this.toConsole, this)
-    this.plane.on(Node.EventType.TOUCH_MOVE, this.toConsole, this)
-    this.plane.on(Node.EventType.TOUCH_END, this.toConsole, this)
+    this.customWindows()
+
+    this.plane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
+    this.plane.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
+
     this.uiTransform = this.plane.getComponent(UITransform)
-    // ScrollView.EventType
-    this.scrollView.getComponent(ScrollView).cancelInnerEvents = false
+    this.formWidth = this.uiTransform.width
+    this.formHeight = this.uiTransform.height
+
+    for (let cube of this.targetNode.children) {
+      cube.getComponent(BoxCollider).setGroup(2)
+      cube.getComponent(BoxCollider).setMask(2)
+    }
   }
-  toConsole(event) {
-    console.log(event)
-    this.uiTransform.width = 600
+
+  customWindows() {
+    let width = view.getVisibleSize().width
+    let height = view.getVisibleSize().height
+    let unit = height / 10
+    let rightPix = this.rightMenu.getComponent(UITransform).width
+    let leftPix =
+      this.leftMenu.getComponent(UITransform).width +
+      this.leftMenu.getPosition().x
+    console.log(width, height, rightPix, leftPix)
+    let mainWidth = width - leftPix - rightPix
+
+    let oldCenterX = width / 2 / unit
+    let newCenterX = leftPix / unit + mainWidth / 2 / unit
+    let cameraPox = this.cameraCom.node.getPosition()
+    cameraPox.x = cameraPox.x + (oldCenterX - newCenterX)
+    this.cameraCom.node.setPosition(cameraPox)
+
+    let mapWidth = this.targetNode.getScale().x * height
+    if (mapWidth < mainWidth) {
+      cameraPox.y = (12.07 / mainWidth) * mapWidth * 0.96
+      cameraPox.x = (cameraPox.x / 12.07) * cameraPox.y
+      this.cameraCom.node.setPosition(cameraPox)
+    }
   }
+
   onTouchStart(event) {
     this.plane.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
-    this.uiTransform.width = 600
+    this.uiTransform.width = this.formWidth * 10
+    this.uiTransform.height = this.formHeight * 10
     const touch = event.touch!
     this.cameraCom.screenPointToRay(
       touch.getLocationX(),
@@ -65,13 +98,14 @@ export class UIManager extends Component {
     )
     if (PhysicsSystem.instance.raycast(this._ray)) {
       const raycastResults = PhysicsSystem.instance.raycastResults
-      for (let i = 0; i < raycastResults.length; i++) {
-        const item = raycastResults[i]
+      if (raycastResults.length) {
         this.player = instantiate(this.playerPrefab)
         this.player.setParent(director.getScene())
-        this.player.setPosition(item.hitPoint)
-        break
+        let vec3 = raycastResults[0].hitPoint
+        this.player.setPosition(new Vec3(vec3.x, 0, vec3.z))
       }
+    } else {
+      console.log('没有碰撞')
     }
   }
 
@@ -85,18 +119,19 @@ export class UIManager extends Component {
     if (PhysicsSystem.instance.raycast(this._ray)) {
       const raycastResults = PhysicsSystem.instance.raycastResults
       for (let i = 0; i < raycastResults.length; i++) {
-        const item = raycastResults[i]
-        this.player.setPosition(item.hitPoint)
-        if (item.collider.node == this.targetNode) {
-          break
+        if (raycastResults[i].collider.node == this.targetNode) {
+          let vec3 = raycastResults[i].hitPoint
+          this.player.setPosition(new Vec3(vec3.x, 0, vec3.z))
         }
       }
     }
   }
   onTouchEnd(event) {
-    this.uiTransform.width = 300
+    this.uiTransform.width = this.formWidth
+    this.uiTransform.height = this.formHeight
     const touch = event.touch!
     this.plane.off(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
+    if (!this.player) return
     this.cameraCom.screenPointToRay(
       touch.getLocationX(),
       touch.getLocationY(),
@@ -104,7 +139,13 @@ export class UIManager extends Component {
     )
     if (PhysicsSystem.instance.raycast(this._ray)) {
       const raycastResults = PhysicsSystem.instance.raycastResults
-      if (raycastResults.length < 2 && this.player) {
+      let canSpace = false
+      for (let i = 0; i < raycastResults.length; i++) {
+        if (raycastResults[i].collider.node == this.targetNode) {
+          canSpace = true
+        }
+      }
+      if (!canSpace) {
         this.player.destroy()
         return
       }

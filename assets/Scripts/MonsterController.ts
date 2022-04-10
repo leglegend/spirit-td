@@ -13,6 +13,7 @@ import {
   Collider,
   ITriggerEvent
 } from 'cc'
+import { GameManager } from './GameManager'
 const { ccclass, property } = _decorator
 
 /**
@@ -61,9 +62,9 @@ export class MonsterController extends Component {
 
   private curRoad: number = 0
   private roads = [
-    [-0.5, 2],
-    [-1.3, 0.7],
-    [4.5, -3.5]
+    [-0.65, 2],
+    [-2, 0.85],
+    [7.4, -4]
   ]
 
   private isDie: boolean = false
@@ -74,29 +75,45 @@ export class MonsterController extends Component {
   //   [0, 0]
   // ]
 
+  private monsterInfo = {
+    name: '',
+    hp: 0,
+    speed: 0
+  }
+
+  private collider: Collider | null = null
+
   @property({ type: Node })
   public body: Node | null = null
   @property({ type: SkeletalAnimation })
   public CocosAnim: SkeletalAnimation | null = null
   start() {
-    // input.on(Input.EventType.MOUSE_UP, this.onMouseUp, this)
-    this.onMouseUp()
-    let collider = this.node.children[0].getComponent(Collider)
-    //console.log(collider)
-    collider.on('onTriggerStay', this.onTriggerStay, this)
+    for (let monster of this.node.getParent().getComponent(GameManager)
+      .monsters) {
+      console.log(monster)
+      console.log(this.node.name)
+      if (monster.name == this.node.name.toLowerCase())
+        this.monsterInfo = Object.assign(this.monsterInfo, monster)
+      console.log(this.monsterInfo)
+    }
+    this.node.setPosition(new Vec3(-4.75, 0, 4.35))
+    this.begin()
+    this.collider = this.node.children[0].getComponent(Collider)
+    this.collider.on('onTriggerStay', this.onTriggerStay, this)
   }
 
   private onTriggerStay(event: ITriggerEvent) {
-    this.HP -= 1
-    if (this.HP > 0) return
+    this.monsterInfo.hp -= 1
+    if (this.monsterInfo.hp > 0 || this.monsterInfo.hp < 0) return
+    this.collider.off('onTriggerStay', this.onTriggerStay, this)
     console.log(event)
     this.CocosAnim.play('die')
     setTimeout(() => {
       if (this.node) this.node.destroy()
-    }, this.CocosAnim.getState('die').duration * 1000)
+    }, this.CocosAnim.getState('die').duration * 900)
     // this.node.destroy()
   }
-  onMouseUp() {
+  begin() {
     this._startJump = true
     this._startRot = true
     this._curJumpTime = 0
@@ -117,7 +134,7 @@ export class MonsterController extends Component {
     let dx = Math.abs(this._curXLong)
     let dz = Math.abs(this._curZLong)
     let dis = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2))
-    this._curRoadTime = dis / 1.2
+    this._curRoadTime = dis / this.monsterInfo.speed
     let curRot = Quat.toEuler(this.node.getPosition(), this.node.getRotation())
     this._curRot = new Vec3(curRot.x, curRot.y, curRot.z)
     this._targetRot = this.calcNodeRot(
@@ -156,7 +173,7 @@ export class MonsterController extends Component {
     }
   }
   update(deltaTime: number) {
-    if (this.HP == 0) return
+    if (this.monsterInfo.hp == 0) return
     if (this._startJump) {
       this._curJumpTime += deltaTime
       if (this._curJumpTime > this._curRoadTime) {

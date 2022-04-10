@@ -1,23 +1,13 @@
-import {
-  _decorator,
-  Component,
-  Node,
-  Prefab,
-  instantiate,
-  input,
-  Camera,
-  geometry,
-  PhysicsSystem,
-  Input,
-  director
-} from 'cc'
-import { Player } from './Player'
+import { _decorator, Component, Node, Prefab, instantiate, Camera } from 'cc'
+
 const { ccclass, property } = _decorator
 
 @ccclass('GameManager')
 export class GameManager extends Component {
   @property({ type: Prefab })
   public monster: Prefab | null = null
+  @property({ type: Prefab })
+  public stone: Prefab | null = null
   @property({ type: Prefab })
   public playerPrefab: Prefab | null = null
   @property(Camera)
@@ -28,105 +18,51 @@ export class GameManager extends Component {
 
   public player!: Node
 
-  private _ray: geometry.Ray = new geometry.Ray()
-  start() {
-    input.on(Input.EventType.TOUCH_START, this.onTouchStart, this)
-    input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this)
-  }
-  onGameBegin() {
-    this.schedule(this.createMonster, 2, 3)
-  }
-  onTouchStart(event) {
-    input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
-    console.log(event)
-    return
-    const touch = event.touch!
-    this.cameraCom.screenPointToRay(
-      touch.getLocationX(),
-      touch.getLocationY(),
-      this._ray
-    )
-    console.log(this._ray)
-    if (PhysicsSystem.instance.raycast(this._ray)) {
-      const raycastResults = PhysicsSystem.instance.raycastResults
-      for (let i = 0; i < raycastResults.length; i++) {
-        const item = raycastResults[i]
-        this.player = instantiate(this.playerPrefab)
-        this.player.setParent(director.getScene())
-        this.player.setPosition(item.hitPoint)
-        break
-      }
-    } else {
-      console.log('raycast does not hit the target node !')
-    }
-  }
+  private times: number = 0
 
-  onTouchMove(event) {
-    console.log(event)
-    return
-    const touch = event.touch!
-    this.cameraCom.screenPointToRay(
-      touch.getLocationX(),
-      touch.getLocationY(),
-      this._ray
-    )
-    console.log(this._ray)
-    if (PhysicsSystem.instance.raycast(this._ray)) {
-      const raycastResults = PhysicsSystem.instance.raycastResults
-      for (let i = 0; i < raycastResults.length; i++) {
-        const item = raycastResults[i]
-        console.log(item.hitPoint)
-        this.player.setPosition(item.hitPoint)
-        if (item.collider.node == this.targetNode) {
-          console.log('raycast hit the target node !')
-          break
-        }
-      }
-    } else {
-      console.log('raycast does not hit the target node !')
+  private games = [
+    {
+      name: 'monster',
+      count: 10,
+      interval: 2,
+      delay: 0
+    },
+    {
+      name: 'stone',
+      count: 5,
+      interval: 4,
+      delay: 25
+    }
+  ]
+
+  public monsters = [
+    { name: 'monster', hp: 3, speed: 1.2 },
+    { name: 'stone', hp: 50, speed: 0.8 }
+  ]
+
+  start() {}
+  onGameBegin() {
+    for (let game of this.games) {
+      let that = this
+      this.schedule(
+        () => {
+          let monster = instantiate(this[game.name])
+          that.node.addChild(monster)
+        },
+        game.interval,
+        game.count,
+        game.delay
+      )
     }
   }
-  onTouchEnd(event) {
-    console.log(event)
-    return
-    const touch = event.touch!
-    input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this)
-    this.cameraCom.screenPointToRay(
-      touch.getLocationX(),
-      touch.getLocationY(),
-      this._ray
-    )
-    if (PhysicsSystem.instance.raycast(this._ray)) {
-      const raycastResults = PhysicsSystem.instance.raycastResults
-      if (raycastResults.length < 2 && this.player) {
-        this.player.destroy()
-        return
-      }
-    } else {
-      if (this.player) this.player.destroy()
-      return
-    }
-    if (this.player) {
-      this.player.getComponent(Player).begin()
-      this.player = null
-    }
+  createTime() {
+    this.times += 1
   }
-  createMonster() {
-    let monster = instantiate(this.monster)
+  createMonster(name) {
+    let monster = instantiate(this[name])
     this.node.addChild(monster)
   }
   // update (deltaTime: number) {
   //     // [4]
   // }
 }
-
-/**
- * [1] Class member could be defined like this.
- * [2] Use `property` decorator if your want the member to be serializable.
- * [3] Your initialization goes here.
- * [4] Your update function goes here.
- *
- * Learn more about scripting: https://docs.cocos.com/creator/3.4/manual/zh/scripting/
- * Learn more about CCClass: https://docs.cocos.com/creator/3.4/manual/zh/scripting/decorator.html
- * Learn more about life-cycle callbacks: https://docs.cocos.com/creator/3.4/manual/zh/scripting/life-cycle-callbacks.html
- */
