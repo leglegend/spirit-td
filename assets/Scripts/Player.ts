@@ -65,7 +65,7 @@ export class Player extends Component {
 
     this.collider = this.node.getChildByName('area').getComponent(Collider)
     this.collider.setGroup(2)
-    this.collider.setMask(2)
+    this.collider.setMask(3)
     this.collider.on('onTriggerEnter', this.onTriggerEnter, this)
     this.collider.on('onTriggerExit', this.onTriggerExit, this)
     this.canSpace(this.triggerNumber == 0)

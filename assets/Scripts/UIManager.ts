@@ -28,10 +28,11 @@ export class UIManager extends Component {
   @property({ type: Node })
   private background: Node | null = null
   @property({ type: Node })
-  private plane: Node | null = null
-
+  private rightPlane: Node | null = null
+  @property({ type: Node })
+  private mainPlane: Node | null = null
   @property({ type: Prefab })
-  public playerPrefab: Prefab | null = null
+  public playerPrefab: Prefab | null = null // 2-3
   @property(Camera)
   public cameraCom!: Camera
 
@@ -44,18 +45,22 @@ export class UIManager extends Component {
 
   public player!: Node
 
+  public currentPlayer!: Node
+
   private _ray: geometry.Ray = new geometry.Ray()
   start() {
     this.customWindows()
+    this.onMainPlaneTouch()
 
-    this.plane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
-    this.plane.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
+    this.rightPlane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
+    this.rightPlane.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
 
-    this.uiTransform = this.plane.getComponent(UITransform)
+    this.uiTransform = this.rightPlane.getComponent(UITransform)
     this.formWidth = this.uiTransform.width
     this.formHeight = this.uiTransform.height
 
     for (let cube of this.targetNode.children) {
+      // 地形 2-2
       cube.getComponent(BoxCollider).setGroup(2)
       cube.getComponent(BoxCollider).setMask(2)
     }
@@ -69,6 +74,10 @@ export class UIManager extends Component {
     let leftPix =
       this.leftMenu.getComponent(UITransform).width +
       this.leftMenu.getPosition().x
+    if (width / height <= 16 / 9) {
+      leftPix = 0
+      this.leftMenu.destroy()
+    }
     console.log(width, height, rightPix, leftPix)
     let mainWidth = width - leftPix - rightPix
 
@@ -86,8 +95,49 @@ export class UIManager extends Component {
     }
   }
 
+  onMainPlaneTouch() {
+    let currentNode = null
+    this.mainPlane.on(
+      Node.EventType.TOUCH_START,
+      (event) => {
+        this.currentPlayer = null
+        currentNode = this.getFirstPlayer(event)
+      },
+      this
+    )
+    this.mainPlane.on(
+      Node.EventType.TOUCH_END,
+      (event) => {
+        if (currentNode && currentNode == this.getFirstPlayer(event)) {
+          this.currentPlayer = currentNode.getParent()
+          console.log(this.currentPlayer)
+        }
+      },
+      this
+    )
+  }
+
+  getFirstPlayer(event) {
+    const touch = event.touch!
+    this.cameraCom.screenPointToRay(
+      touch.getLocationX(),
+      touch.getLocationY(),
+      this._ray
+    )
+    if (PhysicsSystem.instance.raycast(this._ray)) {
+      const raycastResults = PhysicsSystem.instance.raycastResults
+      for (let i = 0; i < raycastResults.length; i++) {
+        let collider = raycastResults[i].collider
+        if (collider.getGroup() == 2 && collider.getMask() == 3) {
+          return collider.node
+        }
+      }
+    }
+    return null
+  }
+
   onTouchStart(event) {
-    this.plane.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
+    this.rightPlane.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
     this.uiTransform.width = this.formWidth * 10
     this.uiTransform.height = this.formHeight * 10
     const touch = event.touch!
@@ -130,7 +180,7 @@ export class UIManager extends Component {
     this.uiTransform.width = this.formWidth
     this.uiTransform.height = this.formHeight
     const touch = event.touch!
-    this.plane.off(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
+    this.rightPlane.off(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
     if (!this.player) return
     this.cameraCom.screenPointToRay(
       touch.getLocationX(),

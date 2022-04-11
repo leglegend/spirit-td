@@ -39,11 +39,11 @@
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 247
+      "__id__": 250
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 248
+      "__id__": 251
     },
     "_id": "89451cd3-f98f-468c-89ce-aa034b6027f5"
   },
@@ -1737,8 +1737,11 @@
     "background": {
       "__id__": 7
     },
-    "plane": {
+    "rightPlane": {
       "__id__": 61
+    },
+    "mainPlane": {
+      "__id__": 172
     },
     "playerPrefab": {
       "__uuid__": "d9bb0622-5c6a-4e15-b106-4444952278c7",
@@ -1761,28 +1764,28 @@
     },
     "_children": [
       {
-        "__id__": 175
+        "__id__": 178
       },
       {
-        "__id__": 179
+        "__id__": 182
       },
       {
-        "__id__": 231
+        "__id__": 234
       },
       {
-        "__id__": 240
+        "__id__": 243
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 244
+        "__id__": 247
       },
       {
-        "__id__": 245
+        "__id__": 248
       },
       {
-        "__id__": 246
+        "__id__": 249
       }
     ],
     "_prefab": null,
@@ -1836,18 +1839,21 @@
       },
       {
         "__id__": 72
+      },
+      {
+        "__id__": 172
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 172
+        "__id__": 175
       },
       {
-        "__id__": 173
+        "__id__": 176
       },
       {
-        "__id__": 174
+        "__id__": 177
       }
     ],
     "_prefab": null,
@@ -1935,7 +1941,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 365.48223350253807,
+    "_orthoHeight": 332.6226012793177,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -5902,6 +5908,102 @@
     "_id": "d6F1k79f1CCao8FThD63BP"
   },
   {
+    "__type__": "cc.Node",
+    "_name": "MainPlane",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 58
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 173
+      },
+      {
+        "__id__": 174
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": -125,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "87hJWlimZF8pzyyb+/PUVl"
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 172
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 710,
+      "height": 640
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_id": "51a3Ewd0RD44PKmFTMs1qO"
+  },
+  {
+    "__type__": "cc.Widget",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 172
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_alignFlags": 45,
+    "_target": null,
+    "_left": 0,
+    "_right": 250,
+    "_top": 0,
+    "_bottom": 0,
+    "_horizontalCenter": 0,
+    "_verticalCenter": 0,
+    "_isAbsLeft": true,
+    "_isAbsRight": true,
+    "_isAbsTop": true,
+    "_isAbsBottom": true,
+    "_isAbsHorizontalCenter": true,
+    "_isAbsVerticalCenter": true,
+    "_originalWidth": 100,
+    "_originalHeight": 100,
+    "_alignMode": 2,
+    "_lockFlags": 0,
+    "_id": "41HTfjgb5D1oYtXaFoMnKH"
+  },
+  {
     "__type__": "cc.UITransform",
     "_name": "",
     "_objFlags": 0,
@@ -5977,13 +6079,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 176
+        "__id__": 179
       },
       {
-        "__id__": 177
+        "__id__": 180
       },
       {
-        "__id__": 178
+        "__id__": 181
       }
     ],
     "_prefab": null,
@@ -6020,7 +6122,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 175
+      "__id__": 178
     },
     "_enabled": true,
     "__prefab": null,
@@ -6041,7 +6143,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 175
+      "__id__": 178
     },
     "_enabled": true,
     "__prefab": null,
@@ -6080,7 +6182,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 175
+      "__id__": 178
     },
     "_enabled": true,
     "__prefab": null,
@@ -6113,34 +6215,34 @@
     },
     "_children": [
       {
-        "__id__": 180
+        "__id__": 183
       },
       {
-        "__id__": 188
+        "__id__": 191
       },
       {
-        "__id__": 196
+        "__id__": 199
       },
       {
-        "__id__": 204
+        "__id__": 207
       },
       {
-        "__id__": 212
+        "__id__": 215
       },
       {
-        "__id__": 220
+        "__id__": 223
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 228
+        "__id__": 231
       },
       {
-        "__id__": 229
+        "__id__": 232
       },
       {
-        "__id__": 230
+        "__id__": 233
       }
     ],
     "_prefab": null,
@@ -6177,23 +6279,23 @@
     "_name": "PlayerDraw",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 179
+      "__id__": 182
     },
     "_children": [
       {
-        "__id__": 181
+        "__id__": 184
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 185
+        "__id__": 188
       },
       {
-        "__id__": 186
+        "__id__": 189
       },
       {
-        "__id__": 187
+        "__id__": 190
       }
     ],
     "_prefab": null,
@@ -6230,19 +6332,19 @@
     "_name": "PlayerBox",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 180
+      "__id__": 183
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 182
+        "__id__": 185
       },
       {
-        "__id__": 183
+        "__id__": 186
       },
       {
-        "__id__": 184
+        "__id__": 187
       }
     ],
     "_prefab": null,
@@ -6279,7 +6381,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 181
+      "__id__": 184
     },
     "_enabled": true,
     "__prefab": null,
@@ -6300,7 +6402,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 181
+      "__id__": 184
     },
     "_enabled": true,
     "__prefab": null,
@@ -6339,7 +6441,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 181
+      "__id__": 184
     },
     "_enabled": true,
     "__prefab": null,
@@ -6368,7 +6470,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 180
+      "__id__": 183
     },
     "_enabled": true,
     "__prefab": null,
@@ -6389,7 +6491,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 180
+      "__id__": 183
     },
     "_enabled": true,
     "__prefab": null,
@@ -6428,7 +6530,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 180
+      "__id__": 183
     },
     "_enabled": true,
     "__prefab": null,
@@ -6457,23 +6559,23 @@
     "_name": "PlayerDraw-001",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 179
+      "__id__": 182
     },
     "_children": [
       {
-        "__id__": 189
+        "__id__": 192
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 193
+        "__id__": 196
       },
       {
-        "__id__": 194
+        "__id__": 197
       },
       {
-        "__id__": 195
+        "__id__": 198
       }
     ],
     "_prefab": null,
@@ -6510,19 +6612,19 @@
     "_name": "PlayerBox",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 188
+      "__id__": 191
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 190
+        "__id__": 193
       },
       {
-        "__id__": 191
+        "__id__": 194
       },
       {
-        "__id__": 192
+        "__id__": 195
       }
     ],
     "_prefab": null,
@@ -6559,7 +6661,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 189
+      "__id__": 192
     },
     "_enabled": true,
     "__prefab": null,
@@ -6580,7 +6682,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 189
+      "__id__": 192
     },
     "_enabled": true,
     "__prefab": null,
@@ -6619,7 +6721,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 189
+      "__id__": 192
     },
     "_enabled": true,
     "__prefab": null,
@@ -6648,7 +6750,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 188
+      "__id__": 191
     },
     "_enabled": true,
     "__prefab": null,
@@ -6669,7 +6771,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 188
+      "__id__": 191
     },
     "_enabled": true,
     "__prefab": null,
@@ -6708,7 +6810,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 188
+      "__id__": 191
     },
     "_enabled": true,
     "__prefab": null,
@@ -6737,23 +6839,23 @@
     "_name": "PlayerDraw-002",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 179
+      "__id__": 182
     },
     "_children": [
       {
-        "__id__": 197
+        "__id__": 200
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 201
+        "__id__": 204
       },
       {
-        "__id__": 202
+        "__id__": 205
       },
       {
-        "__id__": 203
+        "__id__": 206
       }
     ],
     "_prefab": null,
@@ -6790,19 +6892,19 @@
     "_name": "PlayerBox",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 196
+      "__id__": 199
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 198
+        "__id__": 201
       },
       {
-        "__id__": 199
+        "__id__": 202
       },
       {
-        "__id__": 200
+        "__id__": 203
       }
     ],
     "_prefab": null,
@@ -6839,7 +6941,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 197
+      "__id__": 200
     },
     "_enabled": true,
     "__prefab": null,
@@ -6860,7 +6962,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 197
+      "__id__": 200
     },
     "_enabled": true,
     "__prefab": null,
@@ -6899,7 +7001,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 197
+      "__id__": 200
     },
     "_enabled": true,
     "__prefab": null,
@@ -6928,7 +7030,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 196
+      "__id__": 199
     },
     "_enabled": true,
     "__prefab": null,
@@ -6949,7 +7051,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 196
+      "__id__": 199
     },
     "_enabled": true,
     "__prefab": null,
@@ -6988,7 +7090,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 196
+      "__id__": 199
     },
     "_enabled": true,
     "__prefab": null,
@@ -7017,23 +7119,23 @@
     "_name": "PlayerDraw-003",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 179
+      "__id__": 182
     },
     "_children": [
       {
-        "__id__": 205
+        "__id__": 208
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 209
+        "__id__": 212
       },
       {
-        "__id__": 210
+        "__id__": 213
       },
       {
-        "__id__": 211
+        "__id__": 214
       }
     ],
     "_prefab": null,
@@ -7070,19 +7172,19 @@
     "_name": "PlayerBox",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 204
+      "__id__": 207
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 206
+        "__id__": 209
       },
       {
-        "__id__": 207
+        "__id__": 210
       },
       {
-        "__id__": 208
+        "__id__": 211
       }
     ],
     "_prefab": null,
@@ -7119,7 +7221,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 205
+      "__id__": 208
     },
     "_enabled": true,
     "__prefab": null,
@@ -7140,7 +7242,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 205
+      "__id__": 208
     },
     "_enabled": true,
     "__prefab": null,
@@ -7179,7 +7281,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 205
+      "__id__": 208
     },
     "_enabled": true,
     "__prefab": null,
@@ -7208,7 +7310,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 204
+      "__id__": 207
     },
     "_enabled": true,
     "__prefab": null,
@@ -7229,7 +7331,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 204
+      "__id__": 207
     },
     "_enabled": true,
     "__prefab": null,
@@ -7268,7 +7370,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 204
+      "__id__": 207
     },
     "_enabled": true,
     "__prefab": null,
@@ -7297,23 +7399,23 @@
     "_name": "PlayerDraw-004",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 179
+      "__id__": 182
     },
     "_children": [
       {
-        "__id__": 213
+        "__id__": 216
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 217
+        "__id__": 220
       },
       {
-        "__id__": 218
+        "__id__": 221
       },
       {
-        "__id__": 219
+        "__id__": 222
       }
     ],
     "_prefab": null,
@@ -7350,19 +7452,19 @@
     "_name": "PlayerBox",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 212
+      "__id__": 215
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 214
+        "__id__": 217
       },
       {
-        "__id__": 215
+        "__id__": 218
       },
       {
-        "__id__": 216
+        "__id__": 219
       }
     ],
     "_prefab": null,
@@ -7399,7 +7501,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 213
+      "__id__": 216
     },
     "_enabled": true,
     "__prefab": null,
@@ -7420,7 +7522,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 213
+      "__id__": 216
     },
     "_enabled": true,
     "__prefab": null,
@@ -7459,7 +7561,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 213
+      "__id__": 216
     },
     "_enabled": true,
     "__prefab": null,
@@ -7488,7 +7590,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 212
+      "__id__": 215
     },
     "_enabled": true,
     "__prefab": null,
@@ -7509,7 +7611,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 212
+      "__id__": 215
     },
     "_enabled": true,
     "__prefab": null,
@@ -7548,7 +7650,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 212
+      "__id__": 215
     },
     "_enabled": true,
     "__prefab": null,
@@ -7577,23 +7679,23 @@
     "_name": "PlayerDraw-005",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 179
+      "__id__": 182
     },
     "_children": [
       {
-        "__id__": 221
+        "__id__": 224
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 225
+        "__id__": 228
       },
       {
-        "__id__": 226
+        "__id__": 229
       },
       {
-        "__id__": 227
+        "__id__": 230
       }
     ],
     "_prefab": null,
@@ -7630,19 +7732,19 @@
     "_name": "PlayerBox",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 220
+      "__id__": 223
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 222
+        "__id__": 225
       },
       {
-        "__id__": 223
+        "__id__": 226
       },
       {
-        "__id__": 224
+        "__id__": 227
       }
     ],
     "_prefab": null,
@@ -7679,7 +7781,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 221
+      "__id__": 224
     },
     "_enabled": true,
     "__prefab": null,
@@ -7700,7 +7802,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 221
+      "__id__": 224
     },
     "_enabled": true,
     "__prefab": null,
@@ -7739,7 +7841,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 221
+      "__id__": 224
     },
     "_enabled": true,
     "__prefab": null,
@@ -7768,7 +7870,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 220
+      "__id__": 223
     },
     "_enabled": true,
     "__prefab": null,
@@ -7789,7 +7891,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 220
+      "__id__": 223
     },
     "_enabled": true,
     "__prefab": null,
@@ -7828,7 +7930,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 220
+      "__id__": 223
     },
     "_enabled": true,
     "__prefab": null,
@@ -7857,7 +7959,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 179
+      "__id__": 182
     },
     "_enabled": true,
     "__prefab": null,
@@ -7878,7 +7980,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 179
+      "__id__": 182
     },
     "_enabled": true,
     "__prefab": null,
@@ -7917,7 +8019,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 179
+      "__id__": 182
     },
     "_enabled": true,
     "__prefab": null,
@@ -7950,22 +8052,22 @@
     },
     "_children": [
       {
-        "__id__": 232
+        "__id__": 235
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 235
-      },
-      {
-        "__id__": 236
-      },
-      {
-        "__id__": 237
+        "__id__": 238
       },
       {
         "__id__": 239
+      },
+      {
+        "__id__": 240
+      },
+      {
+        "__id__": 242
       }
     ],
     "_prefab": null,
@@ -8002,16 +8104,16 @@
     "_name": "Label",
     "_objFlags": 512,
     "_parent": {
-      "__id__": 231
+      "__id__": 234
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 233
+        "__id__": 236
       },
       {
-        "__id__": 234
+        "__id__": 237
       }
     ],
     "_prefab": null,
@@ -8048,7 +8150,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 232
+      "__id__": 235
     },
     "_enabled": true,
     "__prefab": null,
@@ -8069,7 +8171,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 232
+      "__id__": 235
     },
     "_enabled": true,
     "__prefab": null,
@@ -8108,7 +8210,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 231
+      "__id__": 234
     },
     "_enabled": true,
     "__prefab": null,
@@ -8129,7 +8231,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 231
+      "__id__": 234
     },
     "_enabled": true,
     "__prefab": null,
@@ -8168,13 +8270,13 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 231
+      "__id__": 234
     },
     "_enabled": true,
     "__prefab": null,
     "clickEvents": [
       {
-        "__id__": 238
+        "__id__": 241
       }
     ],
     "_interactable": true,
@@ -8226,7 +8328,7 @@
     "_duration": 0.1,
     "_zoomScale": 1.2,
     "_target": {
-      "__id__": 231
+      "__id__": 234
     },
     "_id": "0fWZ/EI6RGh6j6aBp8HmhS"
   },
@@ -8245,7 +8347,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 231
+      "__id__": 234
     },
     "_enabled": true,
     "__prefab": null,
@@ -8280,13 +8382,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 241
+        "__id__": 244
       },
       {
-        "__id__": 242
+        "__id__": 245
       },
       {
-        "__id__": 243
+        "__id__": 246
       }
     ],
     "_prefab": null,
@@ -8323,7 +8425,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 240
+      "__id__": 243
     },
     "_enabled": true,
     "__prefab": null,
@@ -8344,7 +8446,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 240
+      "__id__": 243
     },
     "_enabled": true,
     "__prefab": null,
@@ -8383,7 +8485,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 240
+      "__id__": 243
     },
     "_enabled": true,
     "__prefab": null,
@@ -8504,19 +8606,19 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 249
-    },
-    "shadows": {
-      "__id__": 250
-    },
-    "_skybox": {
-      "__id__": 251
-    },
-    "fog": {
       "__id__": 252
     },
-    "octree": {
+    "shadows": {
       "__id__": 253
+    },
+    "_skybox": {
+      "__id__": 254
+    },
+    "fog": {
+      "__id__": 255
+    },
+    "octree": {
+      "__id__": 256
     }
   },
   {
