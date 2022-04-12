@@ -8,21 +8,32 @@ import {
   SpriteFrame,
   Texture2D,
   assetManager,
-  ImageAsset
+  ImageAsset,
+  Sprite,
+  Label,
+  EventTarget
 } from 'cc'
 import { Player } from './Player'
 const { ccclass, property } = _decorator
-
+const eventTarget = new EventTarget()
 @ccclass('InfoManager')
 export class InfoManager extends Component {
-  @property(Node)
-  private icon: Node | null = null
   @property({ type: Node })
   private mainPlane: Node | null = null
   @property(Camera)
   public cameraCom!: Camera
+
+  @property(Sprite)
+  private PlayerDraw: Sprite | null = null // 守卫头像
+  @property(Label)
+  private PlayerName: Label | null = null // 守卫名称
+  @property(Label)
+  private PlayerInfo: Label | null = null // 守卫描述
+
   private _ray: geometry.Ray = new geometry.Ray()
   private currentPlayer = null
+  private lastPlayer = null
+
   start() {
     this.onMainPlaneTouch()
   }
@@ -32,6 +43,7 @@ export class InfoManager extends Component {
     this.mainPlane.on(
       Node.EventType.TOUCH_START,
       (event) => {
+        if (this.currentPlayer) this.lastPlayer = this.currentPlayer
         this.currentPlayer = null
         currentNode = this.getFirstPlayer(event)
       },
@@ -42,7 +54,12 @@ export class InfoManager extends Component {
       (event) => {
         if (currentNode && currentNode == this.getFirstPlayer(event)) {
           this.currentPlayer = currentNode.getParent()
+          if (this.lastPlayer && this.lastPlayer != this.currentPlayer)
+            this.lastPlayer.getComponent(Player).showRange(false)
+          this.currentPlayer.getComponent(Player).showRange(true)
           this.showPlayerInfo(this.currentPlayer.getComponent(Player).data)
+        } else if (this.lastPlayer) {
+          this.lastPlayer.getComponent(Player).showRange(false)
         }
       },
       this
@@ -50,12 +67,15 @@ export class InfoManager extends Component {
   }
 
   showPlayerInfo(data) {
+    this.PlayerName.string = data.name
+    this.PlayerInfo.string = data.description
+    let that = this
     assetManager.loadRemote<ImageAsset>(data.image, function (err, imageAsset) {
       const spriteFrame = new SpriteFrame()
       const texture = new Texture2D()
       texture.image = imageAsset
       spriteFrame.texture = texture
-      // ...
+      that.PlayerDraw.spriteFrame = spriteFrame
     })
   }
 

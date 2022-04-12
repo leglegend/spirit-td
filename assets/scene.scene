@@ -1743,9 +1743,6 @@
     "rightPlane": {
       "__id__": 61
     },
-    "mainPlane": {
-      "__id__": 172
-    },
     "playerPrefab": {
       "__uuid__": "d9bb0622-5c6a-4e15-b106-4444952278c7",
       "__expectedType__": "cc.Prefab"
@@ -1944,7 +1941,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 475.3623188405797,
+    "_orthoHeight": 365.48223350253807,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -2698,10 +2695,7 @@
       "b": 255,
       "a": 255
     },
-    "_spriteFrame": {
-      "__uuid__": "ddecedbd-030a-4e62-ba45-d425803c8a03@f9941",
-      "__expectedType__": "cc.SpriteFrame"
-    },
+    "_spriteFrame": null,
     "_type": 0,
     "_fillType": 0,
     "_sizeMode": 0,
@@ -2806,7 +2800,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
+      "width": 0,
       "height": 44.1
     },
     "_anchorPoint": {
@@ -2836,7 +2830,7 @@
       "b": 37,
       "a": 255
     },
-    "_string": "精灵射手",
+    "_string": "",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 25,
@@ -2944,7 +2938,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 108,
+      "width": 0,
       "height": 37.8
     },
     "_anchorPoint": {
@@ -2974,7 +2968,7 @@
       "b": 25,
       "a": 255
     },
-    "_string": "远程物理单位",
+    "_string": "",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 18,
@@ -8653,10 +8647,21 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "icon": {
-      "__id__": 74
+    "mainPlane": {
+      "__id__": 172
     },
-    "mainPlane": null,
+    "cameraCom": {
+      "__id__": 6
+    },
+    "PlayerDraw": {
+      "__id__": 80
+    },
+    "PlayerName": {
+      "__id__": 84
+    },
+    "PlayerInfo": {
+      "__id__": 88
+    },
     "_id": "85TUH7N+ZBl6v4cKRBtn+b"
   },
   {

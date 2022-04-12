@@ -11,10 +11,13 @@ import {
   macro,
   Collider,
   Material,
-  MeshRenderer
+  MeshRenderer,
+  EventTarget
 } from 'cc'
+
 import { MonsterController } from './MonsterController'
 const { ccclass, property } = _decorator
+const eventTarget = new EventTarget()
 
 enum PlayerState {
   PLACE = 'revive', // 放置中
@@ -71,6 +74,13 @@ export class Player extends Component {
     this.collider.on('onTriggerEnter', this.onTriggerEnter, this)
     this.collider.on('onTriggerExit', this.onTriggerExit, this)
     this.canSpace(this.triggerNumber == 0)
+    eventTarget.on(
+      'player-select',
+      (event) => {
+        console.log(event)
+      },
+      this
+    )
   }
   onTriggerEnter() {
     this.triggerNumber += 1
@@ -103,9 +113,9 @@ export class Player extends Component {
     // }, this.getAnimationTime(PlayerState.PLACE))
   }
 
-  noSpace() {
+  public showRange(isShow) {
     let rangePos = this.node.getChildByName('range').getPosition()
-    rangePos.y = 0.1
+    rangePos.y = isShow ? 0.1 : -0.1
     this.node.getChildByName('range').setPosition(rangePos)
   }
 

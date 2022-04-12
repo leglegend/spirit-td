@@ -30,8 +30,6 @@ export class UIManager extends Component {
   private background: Node | null = null
   @property({ type: Node })
   private rightPlane: Node | null = null
-  @property({ type: Node })
-  private mainPlane: Node | null = null
   @property({ type: Prefab })
   public playerPrefab: Prefab | null = null // 2-3
   @property(Camera)
@@ -53,7 +51,6 @@ export class UIManager extends Component {
   private _ray: geometry.Ray = new geometry.Ray()
   start() {
     this.customWindows()
-    this.onMainPlaneTouch()
     this.getPlayers()
 
     this.rightPlane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
@@ -103,49 +100,6 @@ export class UIManager extends Component {
       cameraPox.x = (cameraPox.x / 12.07) * cameraPox.y
       this.cameraCom.node.setPosition(cameraPox)
     }
-  }
-
-  onMainPlaneTouch() {
-    let currentNode = null
-    this.mainPlane.on(
-      Node.EventType.TOUCH_START,
-      (event) => {
-        this.currentPlayer = null
-        currentNode = this.getFirstPlayer(event)
-      },
-      this
-    )
-    this.mainPlane.on(
-      Node.EventType.TOUCH_END,
-      (event) => {
-        if (currentNode && currentNode == this.getFirstPlayer(event)) {
-          this.currentPlayer = currentNode.getParent()
-          this.showPlayerInfo(this.currentPlayer.getComponent(Player).data)
-        }
-      },
-      this
-    )
-  }
-
-  showPlayerInfo(data) {}
-
-  getFirstPlayer(event) {
-    const touch = event.touch!
-    this.cameraCom.screenPointToRay(
-      touch.getLocationX(),
-      touch.getLocationY(),
-      this._ray
-    )
-    if (PhysicsSystem.instance.raycast(this._ray)) {
-      const raycastResults = PhysicsSystem.instance.raycastResults
-      for (let i = 0; i < raycastResults.length; i++) {
-        let collider = raycastResults[i].collider
-        if (collider.getGroup() == 2 && collider.getMask() == 3) {
-          return collider.node
-        }
-      }
-    }
-    return null
   }
 
   onTouchStart(event) {
