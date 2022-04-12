@@ -17,6 +17,7 @@ import {
   Vec3
 } from 'cc'
 import { Player } from './Player'
+import { HttpRequest } from './utils/HttpRequest'
 const { ccclass, property } = _decorator
 
 @ccclass('UIManager')
@@ -40,6 +41,8 @@ export class UIManager extends Component {
   private formWidth: number = 0
   private formHeight: number = 0
 
+  private players
+
   @property(Node)
   public targetNode!: Node
 
@@ -51,6 +54,7 @@ export class UIManager extends Component {
   start() {
     this.customWindows()
     this.onMainPlaneTouch()
+    this.getPlayers()
 
     this.rightPlane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
     this.rightPlane.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
@@ -64,6 +68,12 @@ export class UIManager extends Component {
       cube.getComponent(BoxCollider).setGroup(2)
       cube.getComponent(BoxCollider).setMask(2)
     }
+  }
+
+  getPlayers() {
+    HttpRequest.POST('getPlayers').then((res) => {
+      this.players = res
+    })
   }
 
   customWindows() {
@@ -110,12 +120,14 @@ export class UIManager extends Component {
       (event) => {
         if (currentNode && currentNode == this.getFirstPlayer(event)) {
           this.currentPlayer = currentNode.getParent()
-          console.log(this.currentPlayer)
+          this.showPlayerInfo(this.currentPlayer.getComponent(Player).data)
         }
       },
       this
     )
   }
+
+  showPlayerInfo(data) {}
 
   getFirstPlayer(event) {
     const touch = event.touch!
@@ -151,6 +163,7 @@ export class UIManager extends Component {
       if (raycastResults.length) {
         this.player = instantiate(this.playerPrefab)
         this.player.setParent(director.getScene())
+        this.player.getComponent(Player).setData(this.players[0])
         let vec3 = raycastResults[0].hitPoint
         this.player.setPosition(new Vec3(vec3.x, 0, vec3.z))
       }

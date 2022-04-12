@@ -54,6 +54,8 @@ export class Player extends Component {
 
   private range: Node | null = null
 
+  public data
+
   // 当前角色位置
   private _curPos: Vec3 = new Vec3(0, 0, 0)
   start() {
@@ -77,6 +79,10 @@ export class Player extends Component {
   onTriggerExit() {
     this.triggerNumber -= 1
     this.canSpace(this.triggerNumber == 0)
+  }
+
+  public setData(data) {
+    this.data = data
   }
 
   public begin() {
