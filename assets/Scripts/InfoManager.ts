@@ -67,7 +67,7 @@ export class InfoManager extends Component {
   }
 
   showPlayerInfo(data) {
-    this.PlayerName.string = data.name
+    this.PlayerName.string = data.label
     this.PlayerInfo.string = data.description
     let that = this
     assetManager.loadRemote<ImageAsset>(data.image, function (err, imageAsset) {
