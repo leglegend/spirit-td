@@ -68,7 +68,7 @@ export class UIManager extends Component {
   }
 
   getPlayers() {
-    HttpRequest.POST('getPlayers').then((res) => {
+    HttpRequest.POST('/players/getPlayers').then((res) => {
       this.players = res
     })
   }
