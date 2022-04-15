@@ -24,6 +24,7 @@ export class HomeManager extends Component {
   // @property
   // serializableDummy = 0;
   public gameService
+  public userInfo
   start() {
     let that = this
     wx.login({
@@ -57,16 +58,15 @@ export class HomeManager extends Component {
     })
   }
 
-  shareApp() {
+  authorizeUserInfo() {
+    let that = this
     wx.authorize({
       scope: 'scope.userInfo',
       success: function () {
-        console.log('scope.userInfo')
         wx.getUserInfo({
           success: function (res) {
-            console.log(res)
             HttpRequest.POST('/user/setUserInfo', res.userInfo).then((res) => {
-              console.log(res)
+              that.getUserInfo()
             })
           },
           fail: (res) => {
@@ -74,6 +74,12 @@ export class HomeManager extends Component {
           }
         })
       }
+    })
+  }
+
+  getUserInfo() {
+    HttpRequest.POST('/user/getCurrentUserInfo').then((res) => {
+      this.userInfo = res
     })
   }
 
