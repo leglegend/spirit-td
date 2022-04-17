@@ -10,11 +10,9 @@
   "_techIdx": 0,
   "_defines": [
     {
-      "USE_OUTLINE_PASS": true,
-      "USE_INSTANCING": true
+      "USE_OUTLINE_PASS": true
     },
     {
-      "USE_INSTANCING": true,
       "USE_BASE_COLOR_MAP": true,
       "USE_1ST_SHADE_MAP": true,
       "USE_2ND_SHADE_MAP": true,
@@ -47,18 +45,7 @@
   ],
   "_props": [
     {
-      "lineWidth": 2.5,
-      "baseColor": {
-        "__type__": "cc.Color",
-        "r": 92,
-        "g": 44,
-        "b": 0,
-        "a": 255
-      },
-      "baseColorMap": {
-        "__uuid__": "36487bbd-7df4-45a8-951b-92dd9faa9300@6c48a",
-        "__expectedType__": "cc.Texture2D"
-      }
+      "lineWidth": 8
     },
     {
       "mainColor": {
@@ -80,30 +67,29 @@
         "r": 151,
         "g": 151,
         "b": 151,
-        "a": 249
+        "a": 255
       },
       "specular": {
         "__type__": "cc.Color",
-        "r": 151,
-        "g": 151,
-        "b": 151,
+        "r": 255,
+        "g": 255,
+        "b": 255,
         "a": 0
       },
-      "baseStep": 1,
       "mainTexture": {
-        "__uuid__": "36487bbd-7df4-45a8-951b-92dd9faa9300@6c48a",
+        "__uuid__": "988a5806-879c-4134-8dc7-babe50883cc0@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
       "shadeMap1": {
-        "__uuid__": "36487bbd-7df4-45a8-951b-92dd9faa9300@6c48a",
+        "__uuid__": "988a5806-879c-4134-8dc7-babe50883cc0@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
       "shadeMap2": {
-        "__uuid__": "36487bbd-7df4-45a8-951b-92dd9faa9300@6c48a",
+        "__uuid__": "988a5806-879c-4134-8dc7-babe50883cc0@6c48a",
         "__expectedType__": "cc.Texture2D"
       },
       "specularMap": {
-        "__uuid__": "36487bbd-7df4-45a8-951b-92dd9faa9300@6c48a",
+        "__uuid__": "988a5806-879c-4134-8dc7-babe50883cc0@6c48a",
         "__expectedType__": "cc.Texture2D"
       }
     },

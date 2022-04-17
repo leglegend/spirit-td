@@ -14,7 +14,14 @@ import {
   UITransform,
   ScrollView,
   BoxCollider,
-  Vec3
+  Vec3,
+  Sprite,
+  ImageAsset,
+  assetManager,
+  SpriteFrame,
+  Texture2D,
+  Label,
+  Widget
 } from 'cc'
 import { Player } from './Player'
 import { HttpRequest } from './utils/HttpRequest'
@@ -30,10 +37,18 @@ export class UIManager extends Component {
   private background: Node | null = null
   @property({ type: Node })
   private rightPlane: Node | null = null
+  @property({ type: Node })
+  private playerBox: Node | null = null
+  @property({ type: Prefab })
+  public itemPrefab: Prefab | null = null // 2-3
   @property({ type: Prefab })
   public playerPrefab: Prefab | null = null // 2-3
+  @property({ type: Prefab })
+  public bingnvPrefab: Prefab | null = null // 2-3
   @property(Camera)
   public cameraCom!: Camera
+  @property(Camera)
+  public canvasCom!: Camera
 
   private uiTransform
   private formWidth: number = 0
@@ -53,8 +68,8 @@ export class UIManager extends Component {
     this.customWindows()
     this.getPlayers()
 
-    this.rightPlane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
-    this.rightPlane.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
+    // this.rightPlane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
+    // this.rightPlane.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
 
     this.uiTransform = this.rightPlane.getComponent(UITransform)
     this.formWidth = this.uiTransform.width
@@ -68,9 +83,64 @@ export class UIManager extends Component {
   }
 
   getPlayers() {
+    console.log(this.playerBox.getPosition())
     HttpRequest.POST('/players/getPlayers').then((res) => {
       this.players = res
+      for (let i = 0; i < this.players.length; i++) {
+        this.setPlayer(this.players[i], i)
+      }
     })
+  }
+
+  setPlayer(player, index: number) {
+    let item = instantiate(this.itemPrefab)
+    this.playerBox.addChild(item)
+    item.getChildByName('PlayerDraw').getComponent(Sprite).spriteFrame
+    item.getChildByName('HPNumber').getComponent(Label).string =
+      '$' + player.price
+    item.getComponent(Widget).top = 130 * parseInt(index / 2 + '')
+    item.getComponent(Widget).left = (index % 2) * 100
+    assetManager.loadRemote<ImageAsset>(
+      player.image,
+      function (err, imageAsset) {
+        const spriteFrame = new SpriteFrame()
+        const texture = new Texture2D()
+        texture.image = imageAsset
+        spriteFrame.texture = texture
+        item.getChildByName('PlayerDraw').getComponent(Sprite).spriteFrame =
+          spriteFrame
+      }
+    )
+
+    let playerPlane = item.getChildByName('PlayerPlane')
+    playerPlane.on(
+      Node.EventType.TOUCH_START,
+      (event) => {
+        const touch = event.touch!
+        this.cameraCom.screenPointToRay(
+          touch.getLocationX(),
+          touch.getLocationY(),
+          this._ray
+        )
+        if (PhysicsSystem.instance.raycast(this._ray)) {
+          const raycastResults = PhysicsSystem.instance.raycastResults
+          if (raycastResults.length) {
+            // this.player = instantiate(this.playerPrefab)
+            this.player = instantiate(this.bingnvPrefab)
+            this.player.setParent(director.getScene())
+            this.player.getComponent(Player).setData(this.players[0])
+            let vec3 = raycastResults[0].hitPoint
+            this.player.setPosition(new Vec3(vec3.x, 0, vec3.z))
+          }
+        } else {
+          console.log('没有碰撞')
+        }
+      },
+      this
+    )
+    item
+      .getChildByName('PlayerPlane')
+      .on(Node.EventType.TOUCH_END, (event) => {}, this)
   }
 
   customWindows() {
@@ -115,7 +185,8 @@ export class UIManager extends Component {
     if (PhysicsSystem.instance.raycast(this._ray)) {
       const raycastResults = PhysicsSystem.instance.raycastResults
       if (raycastResults.length) {
-        this.player = instantiate(this.playerPrefab)
+        // this.player = instantiate(this.playerPrefab)
+        this.player = instantiate(this.bingnvPrefab)
         this.player.setParent(director.getScene())
         this.player.getComponent(Player).setData(this.players[0])
         let vec3 = raycastResults[0].hitPoint

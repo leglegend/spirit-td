@@ -1,0 +1,206 @@
+{
+  "ver": "2.1.10",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b",
+  "files": [
+    "__original-animation-0.cconb",
+    "__original-animation-1.cconb"
+  ],
+  "subMetas": {
+    "2c147": {
+      "importer": "gltf-mesh",
+      "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@2c147",
+      "displayName": "",
+      "id": "2c147",
+      "name": "bingnv.mesh",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.1.0",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "1f586": {
+      "importer": "gltf-animation",
+      "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@1f586",
+      "displayName": "",
+      "id": "1f586",
+      "name": "idle.animation",
+      "userData": {
+        "gltfIndex": 0,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1.6666666269302368
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "989ed": {
+      "importer": "gltf-animation",
+      "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@989ed",
+      "displayName": "",
+      "id": "989ed",
+      "name": "attack.animation",
+      "userData": {
+        "gltfIndex": 1,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1.6333333253860474
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "438fe": {
+      "importer": "gltf-skeleton",
+      "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@438fe",
+      "displayName": "",
+      "id": "438fe",
+      "name": "UnnamedSkeleton.skeleton",
+      "userData": {
+        "gltfIndex": 0,
+        "jointsLength": 40
+      },
+      "ver": "1.0.1",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c21b8": {
+      "importer": "gltf-embeded-image",
+      "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@c21b8",
+      "displayName": "",
+      "id": "c21b8",
+      "name": "Map #526.image",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.3",
+      "imported": true,
+      "files": [
+        ".png",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "681e6": {
+      "importer": "texture",
+      "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@681e6",
+      "displayName": "",
+      "id": "681e6",
+      "name": "Map #526.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": false,
+        "imageUuidOrDatabaseUri": "db://assets/Models/bingnv/bingnv.tga"
+      },
+      "ver": "1.0.21",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "88e88": {
+      "importer": "gltf-scene",
+      "uuid": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@88e88",
+      "displayName": "",
+      "id": "88e88",
+      "name": "bingnv.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "Map #526",
+        "remap": "db://assets/Models/bingnv/bingnv.tga",
+        "uri": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@c21b8"
+      }
+    ],
+    "legacyFbxImporter": false,
+    "animationImportSettings": [
+      {
+        "name": "idle",
+        "duration": 1.6666666269302368,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "idle",
+            "from": 0,
+            "to": 1.6666666269302368,
+            "wrapMode": 2
+          }
+        ]
+      },
+      {
+        "name": "attack",
+        "duration": 1.6333333253860474,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "attack",
+            "from": 0,
+            "to": 1.6333333253860474,
+            "wrapMode": 2
+          }
+        ]
+      }
+    ],
+    "redirect": "576944e9-40e2-4ec3-b6c2-67d012af5d8b@88e88",
+    "assetFinder": {
+      "meshes": [
+        "576944e9-40e2-4ec3-b6c2-67d012af5d8b@2c147"
+      ],
+      "skeletons": [
+        "576944e9-40e2-4ec3-b6c2-67d012af5d8b@438fe"
+      ],
+      "textures": [
+        "576944e9-40e2-4ec3-b6c2-67d012af5d8b@681e6"
+      ],
+      "materials": [
+        "7cb786b1-af5f-4343-94c6-fe72e84e4999"
+      ],
+      "scenes": [
+        "576944e9-40e2-4ec3-b6c2-67d012af5d8b@88e88"
+      ]
+    },
+    "dumpMaterials": true,
+    "materialDumpDir": "db://assets/Models/bingnv"
+  }
+}

@@ -109,12 +109,36 @@
         "gltfIndex": 0,
         "sample": 30,
         "span": {
-          "from": 0.03333333333333333,
+          "from": 0,
           "to": 1.3333333730697632
         },
         "wrapMode": 2,
         "speed": 1
       }
+    },
+    "858d3": {
+      "importer": "gltf-animation",
+      "uuid": "e3553cad-2f15-4293-859a-8f43c780f289@858d3",
+      "displayName": "",
+      "id": "858d3",
+      "name": "Takead.animation",
+      "userData": {
+        "gltfIndex": 0,
+        "wrapMode": 0,
+        "speed": 1,
+        "sample": 30,
+        "span": {
+          "from": 0.01,
+          "to": 1.3333333730697632
+        },
+        "events": []
+      },
+      "ver": "1.0.16",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
     },
     "f1394": {
       "importer": "gltf-skeleton",
@@ -296,9 +320,16 @@
         "splits": [
           {
             "name": "Take 001",
-            "from": 0.03333333333333333,
+            "from": 0,
             "to": 1.3333333730697632,
             "wrapMode": 2
+          },
+          {
+            "name": "Takead",
+            "from": 0.01,
+            "to": 1.3333333730697632,
+            "wrapMode": 0,
+            "speed": 1
           }
         ]
       }
