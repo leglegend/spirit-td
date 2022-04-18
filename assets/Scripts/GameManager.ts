@@ -8,6 +8,7 @@ import {
   Label
 } from 'cc'
 import { HttpRequest } from './utils/HttpRequest'
+import { EventCenter } from './utils/EventCenter'
 const { ccclass, property } = _decorator
 
 enum GameState {
@@ -92,11 +93,13 @@ export class GameManager extends Component {
   addGold(gold) {
     this.gold += gold
     this.GoldLabel.string = this.gold + ''
+    EventCenter.emit(EventCenter.GOLD_CHANGE, this.gold)
   }
 
   subGold(gold) {
     this.gold -= gold
     this.GoldLabel.string = this.gold + ''
+    EventCenter.emit(EventCenter.GOLD_CHANGE, this.gold)
   }
 
   update(dt: number) {

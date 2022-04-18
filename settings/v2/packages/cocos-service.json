@@ -1,13 +1,17 @@
 {
   "game": {
-    "name": "未知游戏",
-    "app_id": "UNKNOW",
+    "app_id": "602900945",
+    "name": "orcs-td",
     "c_id": "0"
   },
   "appConfigMaps": [
     {
       "app_id": "UNKNOW",
       "config_id": "3de58b"
+    },
+    {
+      "app_id": "602900945",
+      "config_id": "268d9b"
     }
   ],
   "configs": [
@@ -17,6 +21,22 @@
       "config_name": "Default",
       "config_remarks": "",
       "services": []
+    },
+    {
+      "app_id": "602900945",
+      "config_id": "268d9b",
+      "config_name": "Default",
+      "config_remarks": "",
+      "services": [
+        {
+          "service_id": "235",
+          "enable": false,
+          "param": {
+            "app_id": "602900945",
+            "store_id": "160564"
+          }
+        }
+      ]
     }
   ]
 }

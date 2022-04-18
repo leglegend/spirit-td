@@ -410,7 +410,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "HPNumber",
+    "_name": "GoldNumber",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1

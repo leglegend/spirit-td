@@ -21,11 +21,13 @@ import {
   SpriteFrame,
   Texture2D,
   Label,
-  Widget
+  Widget,
+  Color
 } from 'cc'
 import { GameManager } from './GameManager'
 import { Player } from './Player'
 import { HttpRequest } from './utils/HttpRequest'
+import { EventCenter } from './utils/EventCenter'
 const { ccclass, property } = _decorator
 
 @ccclass('UIManager')
@@ -42,6 +44,8 @@ export class UIManager extends Component {
   private rightPlane: Node | null = null
   @property({ type: Node })
   private playerBox: Node | null = null
+  @property(Label)
+  private centerName: Label | null = null
   @property({ type: Prefab })
   public itemPrefab: Prefab | null = null // 2-3
   @property({ type: Prefab })
@@ -86,12 +90,13 @@ export class UIManager extends Component {
   }
 
   getPlayers() {
-    console.log(this.playerBox.getPosition())
     HttpRequest.POST('/players/getPlayers').then((res) => {
       this.players = res
+      this.centerName.string = res[0].label
       for (let i = 0; i < this.players.length; i++) {
         this.setPlayer(this.players[i], i)
       }
+      this.listenGoldEvent()
     })
   }
 
@@ -100,7 +105,7 @@ export class UIManager extends Component {
     let item = instantiate(this.itemPrefab)
     this.playerBox.addChild(item)
     item.getChildByName('PlayerDraw').getComponent(Sprite).spriteFrame
-    item.getChildByName('HPNumber').getComponent(Label).string =
+    item.getChildByName('GoldNumber').getComponent(Label).string =
       '$' + player.price
     item.getComponent(Widget).top = 130 * parseInt(index / 2 + '')
     item.getComponent(Widget).left = (index % 2) * 100
@@ -123,6 +128,7 @@ export class UIManager extends Component {
     let playerNode = null
 
     function touchStart(event) {
+      that.centerName.string = player.label
       if (that.gameManager.getComponent(GameManager).gold < player.price) return
       playerPlane.on(Node.EventType.TOUCH_MOVE, touchMove, that)
       playerPlane.setScale(50, 50)
@@ -204,6 +210,25 @@ export class UIManager extends Component {
         playerNode = null
       }
     }
+  }
+
+  listenGoldEvent() {
+    let players = this.players
+    let playerBox = this.playerBox
+    EventCenter.on(EventCenter.GOLD_CHANGE, (gold) => {
+      console.log(gold)
+      console.log(players)
+      for (let i = 0; i < players.length; i++) {
+        let GoldNumber = playerBox.children[i]
+          .getChildByName('GoldNumber')
+          .getComponent(Label)
+        if (players[i].price > gold) {
+          GoldNumber.color = new Color('#ff3141')
+        } else {
+          GoldNumber.color = new Color('#ffffff')
+        }
+      }
+    })
   }
 
   customWindows() {
