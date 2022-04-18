@@ -11,7 +11,8 @@ import {
   ImageAsset,
   Sprite,
   Label,
-  EventTarget
+  EventTarget,
+  Widget
 } from 'cc'
 import { Player } from './Player'
 const { ccclass, property } = _decorator
@@ -20,6 +21,8 @@ const eventTarget = new EventTarget()
 export class InfoManager extends Component {
   @property({ type: Node })
   private mainPlane: Node | null = null
+  @property({ type: Node })
+  private infoPlane: Node | null = null
   @property(Camera)
   public cameraCom!: Camera
 
@@ -35,6 +38,7 @@ export class InfoManager extends Component {
   private lastPlayer = null
 
   start() {
+    this.hideInfo()
     this.onMainPlaneTouch()
   }
 
@@ -58,12 +62,35 @@ export class InfoManager extends Component {
             this.lastPlayer.getComponent(Player).showRange(false)
           this.currentPlayer.getComponent(Player).showRange(true)
           this.showPlayerInfo(this.currentPlayer.getComponent(Player).data)
+          this.showInfo()
         } else if (this.lastPlayer) {
           this.lastPlayer.getComponent(Player).showRange(false)
+          this.hideInfo()
+        } else {
+          this.hideInfo()
         }
       },
       this
     )
+  }
+
+  showInfo() {
+    console.log(this.currentPlayer.getPosition())
+    if (this.currentPlayer.getPosition().x > 0) {
+      this.infoPlane.getComponent(Widget).isAlignRight = false
+      this.infoPlane.getComponent(Widget).isAlignLeft = true
+      this.infoPlane.getComponent(Widget).left = 60
+    } else {
+      this.infoPlane.getComponent(Widget).isAlignRight = true
+      this.infoPlane.getComponent(Widget).isAlignLeft = false
+      this.infoPlane.getComponent(Widget).right = 260
+    }
+  }
+
+  hideInfo() {
+    this.infoPlane.getComponent(Widget).isAlignRight = true
+    this.infoPlane.getComponent(Widget).isAlignLeft = false
+    this.infoPlane.getComponent(Widget).right = -50
   }
 
   showPlayerInfo(data) {

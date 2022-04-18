@@ -33,6 +33,12 @@ export class GameManager extends Component {
   private WaveAll: Label | null = null
   @property(Label)
   private WaveNumber: Label | null = null
+  @property(Label)
+  private HPLabel: Label | null = null
+  @property(Label)
+  private GoldLabel: Label | null = null
+  @property(Label)
+  private BeginButton: Label | null = null
 
   public player!: Node
 
@@ -45,6 +51,8 @@ export class GameManager extends Component {
   public currentWaveIndex: number = 0
   private currentMonsterIndex: number = 0
   private monsterTime: number = 0
+  private HP: number = 100
+  public gold: number = 100
 
   start() {
     HttpRequest.POST('/players/getMonsters').then((res) => {
@@ -61,10 +69,13 @@ export class GameManager extends Component {
   onGameBegin() {
     if (this.gameState == GameState.PAUSED) {
       this.gameState = GameState.PLAYING
+      this.BeginButton.string = '游戏中...'
     } else if (this.gameState == GameState.PLAYING) {
       this.gameState = GameState.SPEED
+      this.BeginButton.string = '加速中...'
     } else if (this.gameState == GameState.SPEED) {
       this.gameState = GameState.PLAYING
+      this.BeginButton.string = '游戏中...'
     }
   }
 
@@ -73,11 +84,28 @@ export class GameManager extends Component {
     this.node.addChild(monster)
   }
 
+  subHP(hp: number) {
+    this.HP -= hp
+    this.HPLabel.string = this.HP + ''
+  }
+
+  addGold(gold) {
+    this.gold += gold
+    this.GoldLabel.string = this.gold + ''
+  }
+
+  subGold(gold) {
+    this.gold -= gold
+    this.GoldLabel.string = this.gold + ''
+  }
+
   update(dt: number) {
     if (this.gameState == GameState.PAUSED) return
     if (this.gameState == GameState.HALETIME) {
-      if (!this.node.children || this.node.children.length == 0)
+      if (!this.node.children || this.node.children.length == 0) {
         this.gameState = GameState.PAUSED
+        this.BeginButton.string = '开始战斗'
+      }
       return
     }
     if (this.gameState == GameState.SPEED) dt += dt

@@ -95,11 +95,12 @@ export class Player extends Component {
     this.data = data
   }
 
-  public begin() {
+  public begin(callback) {
     if (this.triggerNumber >= 1) {
       this.node.destroy()
       return
     }
+    callback()
     this.collider.off('onTriggerEnter', this.onTriggerEnter, this)
     this.collider.off('onTriggerExit', this.onTriggerExit, this)
     this.changeState(PlayerState.IDLE)
@@ -208,6 +209,7 @@ export class Player extends Component {
     this.body.setRotationFromEuler(
       new Vec3(45 * Math.sin(angle), 90, -45 * Math.cos(angle))
     )
+    this.range.setRotationFromEuler(new Vec3(0, -1 * theta, 0))
     return new Vec3(0, theta, 0)
   }
 

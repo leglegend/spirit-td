@@ -78,7 +78,8 @@ export class MonsterController extends Component {
   private monsterInfo = {
     name: '',
     hp: 0,
-    speed: 0
+    speed: 0,
+    price: 0
   }
 
   private collider: Collider | null = null
@@ -108,6 +109,10 @@ export class MonsterController extends Component {
     this.collider.off('onTriggerStay', this.onTriggerStay, this)
     console.log(event)
     this.CocosAnim.play('die')
+    this.node
+      .getParent()
+      .getComponent(GameManager)
+      .addGold(this.monsterInfo.price)
     setTimeout(() => {
       if (this.node) this.node.destroy()
     }, this.CocosAnim.getState('die').duration * 900)
@@ -168,9 +173,8 @@ export class MonsterController extends Component {
     }
     this._startJump = false
     this.curRoad = 0
-    if (this.CocosAnim) {
-      this.CocosAnim.play('idle') // 播放跳跃动画
-    }
+    this.node.getParent().getComponent(GameManager).subHP(this.monsterInfo.hp)
+    this.node.destroy()
   }
   update(deltaTime: number) {
     if (this.monsterInfo.hp == 0) return

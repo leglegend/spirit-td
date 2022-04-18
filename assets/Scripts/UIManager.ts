@@ -23,12 +23,15 @@ import {
   Label,
   Widget
 } from 'cc'
+import { GameManager } from './GameManager'
 import { Player } from './Player'
 import { HttpRequest } from './utils/HttpRequest'
 const { ccclass, property } = _decorator
 
 @ccclass('UIManager')
 export class UIManager extends Component {
+  @property({ type: Node })
+  private gameManager: Node | null = null
   @property({ type: Node })
   private rightMenu: Node | null = null
   @property({ type: Node })
@@ -93,6 +96,7 @@ export class UIManager extends Component {
   }
 
   setPlayer(player, index: number) {
+    let that = this
     let item = instantiate(this.itemPrefab)
     this.playerBox.addChild(item)
     item.getChildByName('PlayerDraw').getComponent(Sprite).spriteFrame
@@ -113,34 +117,93 @@ export class UIManager extends Component {
     )
 
     let playerPlane = item.getChildByName('PlayerPlane')
-    playerPlane.on(
-      Node.EventType.TOUCH_START,
-      (event) => {
-        const touch = event.touch!
-        this.cameraCom.screenPointToRay(
-          touch.getLocationX(),
-          touch.getLocationY(),
-          this._ray
-        )
-        if (PhysicsSystem.instance.raycast(this._ray)) {
-          const raycastResults = PhysicsSystem.instance.raycastResults
-          if (raycastResults.length) {
-            // this.player = instantiate(this.playerPrefab)
-            this.player = instantiate(this.bingnvPrefab)
-            this.player.setParent(director.getScene())
-            this.player.getComponent(Player).setData(this.players[0])
-            let vec3 = raycastResults[0].hitPoint
-            this.player.setPosition(new Vec3(vec3.x, 0, vec3.z))
+    playerPlane.on(Node.EventType.TOUCH_START, touchStart, this)
+    playerPlane.on(Node.EventType.TOUCH_END, touchEnd, this)
+
+    let playerNode = null
+
+    function touchStart(event) {
+      if (that.gameManager.getComponent(GameManager).gold < player.price) return
+      playerPlane.on(Node.EventType.TOUCH_MOVE, touchMove, that)
+      playerPlane.setScale(50, 50)
+      const touch = event.touch!
+      that.cameraCom.screenPointToRay(
+        touch.getLocationX(),
+        touch.getLocationY(),
+        that._ray
+      )
+    }
+
+    function touchMove(event) {
+      if (that.gameManager.getComponent(GameManager).gold < player.price) return
+      const touch = event.touch!
+      that.cameraCom.screenPointToRay(
+        touch.getLocationX(),
+        touch.getLocationY(),
+        that._ray
+      )
+      if (PhysicsSystem.instance.raycast(that._ray)) {
+        const raycastResults = PhysicsSystem.instance.raycastResults
+        for (let i = 0; i < raycastResults.length; i++) {
+          if (raycastResults[i].collider.node == that.targetNode) {
+            let vec3 = raycastResults[i].hitPoint
+            if (playerNode) {
+              playerNode.setPosition(new Vec3(vec3.x, 0, vec3.z))
+            } else {
+              playerNode = instantiate(that[player.name + 'Prefab'])
+              playerNode.setParent(director.getScene())
+              playerNode.getComponent(Player).setData(player)
+              let vec3 = raycastResults[0].hitPoint
+              playerNode.setPosition(new Vec3(vec3.x, 0, vec3.z))
+            }
+            return
           }
-        } else {
-          console.log('没有碰撞')
         }
-      },
-      this
-    )
-    item
-      .getChildByName('PlayerPlane')
-      .on(Node.EventType.TOUCH_END, (event) => {}, this)
+        if (playerNode) {
+          playerNode.destroy()
+          playerNode = null
+        }
+      }
+    }
+
+    function touchEnd(event) {
+      if (that.gameManager.getComponent(GameManager).gold < player.price) return
+      console.log(event)
+      console.log(playerNode)
+      playerPlane.off(Node.EventType.TOUCH_MOVE, touchMove, that)
+      playerPlane.setScale(1, 1)
+      const touch = event.touch!
+      if (!playerNode) return
+      that.cameraCom.screenPointToRay(
+        touch.getLocationX(),
+        touch.getLocationY(),
+        that._ray
+      )
+      if (PhysicsSystem.instance.raycast(that._ray)) {
+        const raycastResults = PhysicsSystem.instance.raycastResults
+        let canSpace = false
+        for (let i = 0; i < raycastResults.length; i++) {
+          if (raycastResults[i].collider.node == that.targetNode) {
+            canSpace = true
+          }
+        }
+        if (!canSpace) {
+          playerNode.destroy()
+          playerNode = null
+          return
+        }
+      } else {
+        if (playerNode) playerNode.destroy()
+        playerNode = null
+        return
+      }
+      if (playerNode) {
+        playerNode.getComponent(Player).begin(function (res) {
+          that.gameManager.getComponent(GameManager).subGold(player.price)
+        })
+        playerNode = null
+      }
+    }
   }
 
   customWindows() {
