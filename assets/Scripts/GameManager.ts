@@ -5,18 +5,14 @@ import {
   Prefab,
   instantiate,
   Camera,
-  Label
+  Label,
+  AudioSource
 } from 'cc'
 import { HttpRequest } from './utils/HttpRequest'
 import { EventCenter } from './utils/EventCenter'
+import { GameState } from './utils/GameState'
 const { ccclass, property } = _decorator
 
-enum GameState {
-  PAUSED, //暂停
-  PLAYING, // 出兵中
-  HALETIME, // 一波兵出完了
-  SPEED // 加速中
-}
 @ccclass('GameManager')
 export class GameManager extends Component {
   @property({ type: Prefab })
@@ -43,7 +39,7 @@ export class GameManager extends Component {
 
   public player!: Node
 
-  public gameState: number = GameState.PAUSED
+  public gameState: string = GameState.PAUSED
 
   public monsters
 
@@ -54,6 +50,7 @@ export class GameManager extends Component {
   private monsterTime: number = 0
   private HP: number = 100
   public gold: number = 100
+  private isHalfTime: boolean = false // 一波兵出完了
 
   start() {
     HttpRequest.POST('/players/getMonsters').then((res) => {
@@ -68,6 +65,7 @@ export class GameManager extends Component {
   }
 
   onGameBegin() {
+    this.node.getComponent(AudioSource).play()
     if (this.gameState == GameState.PAUSED) {
       this.gameState = GameState.PLAYING
       this.BeginButton.string = '游戏中...'
@@ -78,6 +76,7 @@ export class GameManager extends Component {
       this.gameState = GameState.PLAYING
       this.BeginButton.string = '游戏中...'
     }
+    EventCenter.emit(EventCenter.SPEED_CHANGE, this.gameState)
   }
 
   createMonster(name) {
@@ -90,7 +89,7 @@ export class GameManager extends Component {
     this.HPLabel.string = this.HP + ''
   }
 
-  addGold(gold) {
+  addGold(gold: number) {
     this.gold += gold
     this.GoldLabel.string = this.gold + ''
     EventCenter.emit(EventCenter.GOLD_CHANGE, this.gold)
@@ -104,9 +103,10 @@ export class GameManager extends Component {
 
   update(dt: number) {
     if (this.gameState == GameState.PAUSED) return
-    if (this.gameState == GameState.HALETIME) {
+    if (this.isHalfTime) {
       if (!this.node.children || this.node.children.length == 0) {
         this.gameState = GameState.PAUSED
+        this.isHalfTime = false
         this.BeginButton.string = '开始战斗'
       }
       return
@@ -132,7 +132,7 @@ export class GameManager extends Component {
       if (this.currentMonsterIndex >= currentWave.monsters.length) {
         this.currentMonsterIndex = 0
         this.currentWaveIndex += 1
-        this.gameState = GameState.HALETIME
+        this.isHalfTime = true
       }
     }
   }

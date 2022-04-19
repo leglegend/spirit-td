@@ -11,12 +11,11 @@ import {
   ImageAsset,
   Sprite,
   Label,
-  EventTarget,
-  Widget
+  Widget,
+  Animation
 } from 'cc'
 import { Player } from './Player'
 const { ccclass, property } = _decorator
-const eventTarget = new EventTarget()
 @ccclass('InfoManager')
 export class InfoManager extends Component {
   @property({ type: Node })
@@ -33,12 +32,17 @@ export class InfoManager extends Component {
   @property(Label)
   private PlayerInfo: Label | null = null // 守卫描述
 
+  private animation: Animation = null!
+
   private _ray: geometry.Ray = new geometry.Ray()
   private currentPlayer = null
   private lastPlayer = null
 
   start() {
-    this.hideInfo()
+    this.animation = this.infoPlane.getComponent(Animation)
+    this.infoPlane.getComponent(Widget).isAlignRight = true
+    this.infoPlane.getComponent(Widget).isAlignLeft = false
+    this.infoPlane.getComponent(Widget).right = -50
     this.onMainPlaneTouch()
   }
 
@@ -48,7 +52,6 @@ export class InfoManager extends Component {
       Node.EventType.TOUCH_START,
       (event) => {
         if (this.currentPlayer) this.lastPlayer = this.currentPlayer
-        this.currentPlayer = null
         currentNode = this.getFirstPlayer(event)
       },
       this
@@ -75,22 +78,38 @@ export class InfoManager extends Component {
   }
 
   showInfo() {
-    console.log(this.currentPlayer.getPosition())
     if (this.currentPlayer.getPosition().x > 0) {
-      this.infoPlane.getComponent(Widget).isAlignRight = false
-      this.infoPlane.getComponent(Widget).isAlignLeft = true
-      this.infoPlane.getComponent(Widget).left = 60
+      if (this.lastPlayer) {
+        this.infoPlane.getComponent(Widget).isAlignRight = false
+        this.infoPlane.getComponent(Widget).isAlignLeft = true
+        this.infoPlane.getComponent(Widget).left = 60
+      } else {
+        this.animation.getState('left_to_right').wrapMode = 1
+        this.animation.play('left_to_right')
+      }
     } else {
-      this.infoPlane.getComponent(Widget).isAlignRight = true
-      this.infoPlane.getComponent(Widget).isAlignLeft = false
-      this.infoPlane.getComponent(Widget).right = 260
+      if (this.lastPlayer) {
+        this.infoPlane.getComponent(Widget).isAlignRight = true
+        this.infoPlane.getComponent(Widget).isAlignLeft = false
+        this.infoPlane.getComponent(Widget).right = 260
+      } else {
+        this.animation.getState('right_to_left').wrapMode = 1
+        this.animation.play('right_to_left')
+      }
     }
   }
 
   hideInfo() {
-    this.infoPlane.getComponent(Widget).isAlignRight = true
-    this.infoPlane.getComponent(Widget).isAlignLeft = false
-    this.infoPlane.getComponent(Widget).right = -50
+    if (!this.currentPlayer) return
+    if (this.currentPlayer.getPosition().x > 0) {
+      this.animation.getState('left_to_right').wrapMode = 36
+      this.animation.play('left_to_right')
+    } else {
+      this.animation.getState('right_to_left').wrapMode = 36
+      this.animation.play('right_to_left')
+    }
+    this.currentPlayer = null
+    this.lastPlayer = null
   }
 
   showPlayerInfo(data) {

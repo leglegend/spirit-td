@@ -9,10 +9,7 @@ import {
   PhysicsSystem,
   instantiate,
   director,
-  input,
-  Input,
   UITransform,
-  ScrollView,
   BoxCollider,
   Vec3,
   Sprite,
@@ -39,10 +36,6 @@ export class UIManager extends Component {
   @property({ type: Node })
   private leftMenu: Node | null = null
   @property({ type: Node })
-  private background: Node | null = null
-  @property({ type: Node })
-  private rightPlane: Node | null = null
-  @property({ type: Node })
   private playerBox: Node | null = null
   @property(Label)
   private centerName: Label | null = null
@@ -57,10 +50,6 @@ export class UIManager extends Component {
   @property(Camera)
   public canvasCom!: Camera
 
-  private uiTransform
-  private formWidth: number = 0
-  private formHeight: number = 0
-
   private players
 
   @property(Node)
@@ -74,13 +63,6 @@ export class UIManager extends Component {
   start() {
     this.customWindows()
     this.getPlayers()
-
-    // this.rightPlane.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
-    // this.rightPlane.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
-
-    this.uiTransform = this.rightPlane.getComponent(UITransform)
-    this.formWidth = this.uiTransform.width
-    this.formHeight = this.uiTransform.height
 
     for (let cube of this.targetNode.children) {
       // 地形 2-2
@@ -174,8 +156,6 @@ export class UIManager extends Component {
 
     function touchEnd(event) {
       if (that.gameManager.getComponent(GameManager).gold < player.price) return
-      console.log(event)
-      console.log(playerNode)
       playerPlane.off(Node.EventType.TOUCH_MOVE, touchMove, that)
       playerPlane.setScale(1, 1)
       const touch = event.touch!
@@ -216,8 +196,6 @@ export class UIManager extends Component {
     let players = this.players
     let playerBox = this.playerBox
     EventCenter.on(EventCenter.GOLD_CHANGE, (gold) => {
-      console.log(gold)
-      console.log(players)
       for (let i = 0; i < players.length; i++) {
         let GoldNumber = playerBox.children[i]
           .getChildByName('GoldNumber')
@@ -243,7 +221,6 @@ export class UIManager extends Component {
       leftPix = 0
       this.leftMenu.destroy()
     }
-    console.log(width, height, rightPix, leftPix)
     let mainWidth = width - leftPix - rightPix
 
     let oldCenterX = width / 2 / unit
@@ -260,80 +237,6 @@ export class UIManager extends Component {
     }
   }
 
-  onTouchStart(event) {
-    this.rightPlane.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
-    this.uiTransform.width = this.formWidth * 10
-    this.uiTransform.height = this.formHeight * 10
-    const touch = event.touch!
-    this.cameraCom.screenPointToRay(
-      touch.getLocationX(),
-      touch.getLocationY(),
-      this._ray
-    )
-    if (PhysicsSystem.instance.raycast(this._ray)) {
-      const raycastResults = PhysicsSystem.instance.raycastResults
-      if (raycastResults.length) {
-        // this.player = instantiate(this.playerPrefab)
-        this.player = instantiate(this.bingnvPrefab)
-        this.player.setParent(director.getScene())
-        this.player.getComponent(Player).setData(this.players[0])
-        let vec3 = raycastResults[0].hitPoint
-        this.player.setPosition(new Vec3(vec3.x, 0, vec3.z))
-      }
-    } else {
-      console.log('没有碰撞')
-    }
-  }
-
-  onTouchMove(event) {
-    const touch = event.touch!
-    this.cameraCom.screenPointToRay(
-      touch.getLocationX(),
-      touch.getLocationY(),
-      this._ray
-    )
-    if (PhysicsSystem.instance.raycast(this._ray)) {
-      const raycastResults = PhysicsSystem.instance.raycastResults
-      for (let i = 0; i < raycastResults.length; i++) {
-        if (raycastResults[i].collider.node == this.targetNode) {
-          let vec3 = raycastResults[i].hitPoint
-          this.player.setPosition(new Vec3(vec3.x, 0, vec3.z))
-        }
-      }
-    }
-  }
-  onTouchEnd(event) {
-    this.uiTransform.width = this.formWidth
-    this.uiTransform.height = this.formHeight
-    const touch = event.touch!
-    this.rightPlane.off(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
-    if (!this.player) return
-    this.cameraCom.screenPointToRay(
-      touch.getLocationX(),
-      touch.getLocationY(),
-      this._ray
-    )
-    if (PhysicsSystem.instance.raycast(this._ray)) {
-      const raycastResults = PhysicsSystem.instance.raycastResults
-      let canSpace = false
-      for (let i = 0; i < raycastResults.length; i++) {
-        if (raycastResults[i].collider.node == this.targetNode) {
-          canSpace = true
-        }
-      }
-      if (!canSpace) {
-        this.player.destroy()
-        return
-      }
-    } else {
-      if (this.player) this.player.destroy()
-      return
-    }
-    if (this.player) {
-      this.player.getComponent(Player).begin()
-      this.player = null
-    }
-  }
   // update (deltaTime: number) {
   //     // [4]
   // }

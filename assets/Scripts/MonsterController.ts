@@ -1,32 +1,17 @@
 import {
   _decorator,
-  input,
-  Input,
   Component,
   Node,
-  EventMouse,
   SkeletalAnimation,
   Vec3,
   Quat,
-  Prefab,
-  instantiate,
   Collider,
   ITriggerEvent
 } from 'cc'
 import { GameManager } from './GameManager'
+import { EventCenter } from './utils/EventCenter'
+import { GameState } from './utils/GameState'
 const { ccclass, property } = _decorator
-
-/**
- * Predefined variables
- * Name = GameMem
- * DateTime = Mon Apr 04 2022 21:49:53 GMT+0800 (中国标准时间)
- * Author = ni5328109
- * FileBasename = GameMem.ts
- * FileBasenameNoExtension = GameMem
- * URL = db://assets/GameMem.ts
- * ManualUrl = https://docs.cocos.com/creator/3.4/manual/zh/
- *
- */
 
 @ccclass('MonsterController')
 export class MonsterController extends Component {
@@ -58,22 +43,10 @@ export class MonsterController extends Component {
   // 角色目标位置
   private _targetRot: Vec3 = new Vec3()
 
-  public HP: number = 2
-
   private curRoad: number = 0
-  private roads = [
-    [-0.65, 2],
-    [-2, 0.85],
-    [7.4, -4]
-  ]
+  private roads = []
 
   private isDie: boolean = false
-  // private roads = [
-  //   [0, 2],
-  //   [2, 2],
-  //   [2, 0],
-  //   [0, 0]
-  // ]
 
   private monsterInfo = {
     name: '',
@@ -84,6 +57,8 @@ export class MonsterController extends Component {
 
   private collider: Collider | null = null
 
+  private gameState: string = null
+
   @property({ type: Node })
   public body: Node | null = null
   @property({ type: SkeletalAnimation })
@@ -91,16 +66,24 @@ export class MonsterController extends Component {
   start() {
     for (let monster of this.node.getParent().getComponent(GameManager)
       .monsters) {
-      console.log(monster)
-      console.log(this.node.name)
       if (monster.name == this.node.name.toLowerCase())
         this.monsterInfo = Object.assign(this.monsterInfo, monster)
-      console.log(this.monsterInfo)
     }
     this.node.setPosition(new Vec3(-4.75, 0, 4.35))
     this.begin()
     this.collider = this.node.children[0].getComponent(Collider)
     this.collider.on('onTriggerStay', this.onTriggerStay, this)
+    let that = this
+    EventCenter.on(EventCenter.SPEED_CHANGE, (state) => {
+      that.gameState = state
+      if (state == GameState.PLAYING) {
+        this.CocosAnim.getState('run').speed = 1
+        this.CocosAnim.getState('die').speed = 1
+      } else if (state == GameState.SPEED) {
+        this.CocosAnim.getState('run').speed = 2
+        this.CocosAnim.getState('die').speed = 2
+      }
+    })
   }
 
   private onTriggerStay(event: ITriggerEvent) {
@@ -178,6 +161,7 @@ export class MonsterController extends Component {
   }
   update(deltaTime: number) {
     if (this.monsterInfo.hp == 0) return
+    if (this.gameState == GameState.SPEED) deltaTime += deltaTime
     if (this._startJump) {
       this._curJumpTime += deltaTime
       if (this._curJumpTime > this._curRoadTime) {

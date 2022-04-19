@@ -185,7 +185,8 @@
       "imported": true,
       "files": [
         ".jpg",
-        ".json"
+        ".json",
+        ".png"
       ],
       "subMetas": {},
       "userData": {

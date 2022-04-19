@@ -12,10 +12,15 @@ import {
   Collider,
   Material,
   MeshRenderer,
-  EventTarget
+  EventTarget,
+  AudioSource,
+  AudioClip,
+  Animation
 } from 'cc'
 
 import { MonsterController } from './MonsterController'
+import { EventCenter } from './utils/EventCenter'
+import { GameState } from './utils/GameState'
 const { ccclass, property } = _decorator
 const eventTarget = new EventTarget()
 
@@ -43,6 +48,14 @@ export class Player extends Component {
   @property({ type: Material })
   public successMaterial: Material | null = null
 
+  public audioSource: AudioSource = null!
+  public animation: Animation = null!
+
+  @property(AudioClip)
+  public bow: AudioClip = null!
+  @property(AudioClip)
+  public arrow: AudioClip = null!
+
   private gameManager = null
   private playerState: string = PlayerState.PLACE
 
@@ -62,6 +75,8 @@ export class Player extends Component {
   // 当前角色位置
   private _curPos: Vec3 = new Vec3(0, 0, 0)
   start() {
+    this.audioSource = this.node.getComponent(AudioSource)
+    this.animation = this.node.getComponent(Animation)
     this.range = this.node.getChildByName('range')
     let scale = this.range.getScale()
     scale.x = (this.attackRange / 5) * scale.x
@@ -101,6 +116,8 @@ export class Player extends Component {
       return
     }
     callback()
+    this.audioSource.play()
+    this.animation.play()
     this.collider.off('onTriggerEnter', this.onTriggerEnter, this)
     this.collider.off('onTriggerExit', this.onTriggerExit, this)
     this.changeState(PlayerState.IDLE)
@@ -215,6 +232,7 @@ export class Player extends Component {
 
   beginAttack() {
     this.attackTime = 0
+    this.audioSource.playOneShot(this.bow, 0.5)
     this.schedule(
       this.doAttack,
       this.getAnimationTime(PlayerState.ATTACKING) / 1000,
@@ -229,5 +247,12 @@ export class Player extends Component {
     let curPos = this.node.getPosition()
     bullet.setPosition(new Vec3(curPos.x, bullet.getPosition().y, curPos.z))
     bullet.setRotation(this.node.getRotation())
+    this.audioSource.playOneShot(this.arrow, 1)
+    setTimeout(
+      function () {
+        this.audioSource.playOneShot(this.bow, 0.5)
+      }.bind(this),
+      this.getAnimationTime(PlayerState.ATTACKING) / 3
+    )
   }
 }
