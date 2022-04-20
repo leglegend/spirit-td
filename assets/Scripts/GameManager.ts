@@ -39,8 +39,6 @@ export class GameManager extends Component {
 
   public player!: Node
 
-  public gameState: string = GameState.PAUSED
-
   public monsters
 
   public map
@@ -49,7 +47,6 @@ export class GameManager extends Component {
   private currentMonsterIndex: number = 0
   private monsterTime: number = 0
   private HP: number = 100
-  public gold: number = 100
   private isHalfTime: boolean = false // 一波兵出完了
 
   start() {
@@ -62,21 +59,28 @@ export class GameManager extends Component {
       this.WaveAll.string = this.map.waves.length + ''
       this.WaveNumber.string = '1'
     })
+    EventCenter.on(
+      EventCenter.GOLD_CHANGE,
+      (res) => {
+        this.GoldLabel.string = EventCenter.GOLD + ''
+      },
+      this
+    )
   }
 
   onGameBegin() {
     this.node.getComponent(AudioSource).play()
-    if (this.gameState == GameState.PAUSED) {
-      this.gameState = GameState.PLAYING
+    if (GameState.STATE == GameState.PAUSED) {
+      GameState.STATE = GameState.PLAYING
       this.BeginButton.string = '游戏中...'
-    } else if (this.gameState == GameState.PLAYING) {
-      this.gameState = GameState.SPEED
+    } else if (GameState.STATE == GameState.PLAYING) {
+      GameState.STATE = GameState.SPEED
       this.BeginButton.string = '加速中...'
-    } else if (this.gameState == GameState.SPEED) {
-      this.gameState = GameState.PLAYING
+    } else if (GameState.STATE == GameState.SPEED) {
+      GameState.STATE = GameState.PLAYING
       this.BeginButton.string = '游戏中...'
     }
-    EventCenter.emit(EventCenter.SPEED_CHANGE, this.gameState)
+    EventCenter.emit(EventCenter.SPEED_CHANGE, GameState.STATE)
   }
 
   createMonster(name) {
@@ -89,29 +93,17 @@ export class GameManager extends Component {
     this.HPLabel.string = this.HP + ''
   }
 
-  addGold(gold: number) {
-    this.gold += gold
-    this.GoldLabel.string = this.gold + ''
-    EventCenter.emit(EventCenter.GOLD_CHANGE, this.gold)
-  }
-
-  subGold(gold) {
-    this.gold -= gold
-    this.GoldLabel.string = this.gold + ''
-    EventCenter.emit(EventCenter.GOLD_CHANGE, this.gold)
-  }
-
   update(dt: number) {
-    if (this.gameState == GameState.PAUSED) return
+    if (GameState.STATE == GameState.PAUSED) return
     if (this.isHalfTime) {
       if (!this.node.children || this.node.children.length == 0) {
-        this.gameState = GameState.PAUSED
+        GameState.STATE = GameState.PAUSED
         this.isHalfTime = false
         this.BeginButton.string = '开始战斗'
       }
       return
     }
-    if (this.gameState == GameState.SPEED) dt += dt
+    if (GameState.STATE == GameState.SPEED) dt = dt * EventCenter.SPEED_TIMES
     if (this.currentWaveIndex >= this.map.waves.length) return
     // this.waveTime += dt
     this.monsterTime += dt

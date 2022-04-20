@@ -21,7 +21,6 @@ import {
   Widget,
   Color
 } from 'cc'
-import { GameManager } from './GameManager'
 import { Player } from './Player'
 import { HttpRequest } from './utils/HttpRequest'
 import { EventCenter } from './utils/EventCenter'
@@ -29,8 +28,6 @@ const { ccclass, property } = _decorator
 
 @ccclass('UIManager')
 export class UIManager extends Component {
-  @property({ type: Node })
-  private gameManager: Node | null = null
   @property({ type: Node })
   private rightMenu: Node | null = null
   @property({ type: Node })
@@ -49,17 +46,14 @@ export class UIManager extends Component {
   public cameraCom!: Camera
   @property(Camera)
   public canvasCom!: Camera
-
-  private players
-
   @property(Node)
   public targetNode!: Node
 
+  private players
   public player!: Node
-
   public currentPlayer!: Node
-
   private _ray: geometry.Ray = new geometry.Ray()
+
   start() {
     this.customWindows()
     this.getPlayers()
@@ -78,7 +72,8 @@ export class UIManager extends Component {
       for (let i = 0; i < this.players.length; i++) {
         this.setPlayer(this.players[i], i)
       }
-      this.listenGoldEvent()
+      this.goldChange(EventCenter.GOLD)
+      EventCenter.on(EventCenter.GOLD_CHANGE, this.goldChange, this)
     })
   }
 
@@ -111,7 +106,7 @@ export class UIManager extends Component {
 
     function touchStart(event) {
       that.centerName.string = player.label
-      if (that.gameManager.getComponent(GameManager).gold < player.price) return
+      if (EventCenter.GOLD < player.price) return
       playerPlane.on(Node.EventType.TOUCH_MOVE, touchMove, that)
       playerPlane.setScale(50, 50)
       const touch = event.touch!
@@ -123,7 +118,7 @@ export class UIManager extends Component {
     }
 
     function touchMove(event) {
-      if (that.gameManager.getComponent(GameManager).gold < player.price) return
+      if (EventCenter.GOLD < player.price) return
       const touch = event.touch!
       that.cameraCom.screenPointToRay(
         touch.getLocationX(),
@@ -155,7 +150,7 @@ export class UIManager extends Component {
     }
 
     function touchEnd(event) {
-      if (that.gameManager.getComponent(GameManager).gold < player.price) return
+      if (EventCenter.GOLD < player.price) return
       playerPlane.off(Node.EventType.TOUCH_MOVE, touchMove, that)
       playerPlane.setScale(1, 1)
       const touch = event.touch!
@@ -184,29 +179,23 @@ export class UIManager extends Component {
         return
       }
       if (playerNode) {
-        playerNode.getComponent(Player).begin(function (res) {
-          that.gameManager.getComponent(GameManager).subGold(player.price)
-        })
+        playerNode.getComponent(Player).begin()
         playerNode = null
       }
     }
   }
 
-  listenGoldEvent() {
-    let players = this.players
-    let playerBox = this.playerBox
-    EventCenter.on(EventCenter.GOLD_CHANGE, (gold) => {
-      for (let i = 0; i < players.length; i++) {
-        let GoldNumber = playerBox.children[i]
-          .getChildByName('GoldNumber')
-          .getComponent(Label)
-        if (players[i].price > gold) {
-          GoldNumber.color = new Color('#ff3141')
-        } else {
-          GoldNumber.color = new Color('#ffffff')
-        }
+  goldChange(gold: number) {
+    for (let i = 0; i < this.players.length; i++) {
+      let GoldNumber = this.playerBox.children[i]
+        .getChildByName('GoldNumber')
+        .getComponent(Label)
+      if (this.players[i].price > gold) {
+        GoldNumber.color = new Color('#ff3141')
+      } else {
+        GoldNumber.color = new Color('#ffffff')
       }
-    })
+    }
   }
 
   customWindows() {

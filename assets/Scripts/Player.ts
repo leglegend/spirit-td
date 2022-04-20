@@ -22,7 +22,6 @@ import { MonsterController } from './MonsterController'
 import { EventCenter } from './utils/EventCenter'
 import { GameState } from './utils/GameState'
 const { ccclass, property } = _decorator
-const eventTarget = new EventTarget()
 
 enum PlayerState {
   PLACE = 'revive', // 放置中
@@ -89,13 +88,6 @@ export class Player extends Component {
     this.collider.on('onTriggerEnter', this.onTriggerEnter, this)
     this.collider.on('onTriggerExit', this.onTriggerExit, this)
     this.canSpace(this.triggerNumber == 0)
-    eventTarget.on(
-      'player-select',
-      (event) => {
-        console.log(event)
-      },
-      this
-    )
   }
   onTriggerEnter() {
     this.triggerNumber += 1
@@ -107,15 +99,16 @@ export class Player extends Component {
   }
 
   public setData(data) {
-    this.data = data
+    this.data = Object.assign({}, data)
   }
 
-  public begin(callback) {
+  public begin() {
     if (this.triggerNumber >= 1) {
       this.node.destroy()
       return
     }
-    callback()
+    EventCenter.GOLD -= this.data.price
+    EventCenter.emit(EventCenter.GOLD_CHANGE, EventCenter.GOLD)
     this.audioSource.play()
     this.animation.play()
     this.collider.off('onTriggerEnter', this.onTriggerEnter, this)

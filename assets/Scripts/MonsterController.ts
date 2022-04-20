@@ -44,7 +44,11 @@ export class MonsterController extends Component {
   private _targetRot: Vec3 = new Vec3()
 
   private curRoad: number = 0
-  private roads = []
+  private roads = [
+    [-0.65, 2],
+    [-2, 0.85],
+    [7.4, -4]
+  ]
 
   private isDie: boolean = false
 
@@ -57,8 +61,6 @@ export class MonsterController extends Component {
 
   private collider: Collider | null = null
 
-  private gameState: string = null
-
   @property({ type: Node })
   public body: Node | null = null
   @property({ type: SkeletalAnimation })
@@ -70,32 +72,36 @@ export class MonsterController extends Component {
         this.monsterInfo = Object.assign(this.monsterInfo, monster)
     }
     this.node.setPosition(new Vec3(-4.75, 0, 4.35))
+    this.gameStateChange(GameState.STATE)
     this.begin()
     this.collider = this.node.children[0].getComponent(Collider)
     this.collider.on('onTriggerStay', this.onTriggerStay, this)
-    let that = this
-    EventCenter.on(EventCenter.SPEED_CHANGE, (state) => {
-      that.gameState = state
-      if (state == GameState.PLAYING) {
-        this.CocosAnim.getState('run').speed = 1
-        this.CocosAnim.getState('die').speed = 1
-      } else if (state == GameState.SPEED) {
-        this.CocosAnim.getState('run').speed = 2
-        this.CocosAnim.getState('die').speed = 2
-      }
-    })
+    EventCenter.on(EventCenter.SPEED_CHANGE, this.gameStateChange, this)
+  }
+
+  setData() {}
+
+  gameStateChange(state: string) {
+    if (state == GameState.PLAYING) {
+      this.CocosAnim.getState('run').speed = 1
+      this.CocosAnim.getState('die').speed = 1
+    } else if (state == GameState.SPEED) {
+      this.CocosAnim.getState('run').speed = EventCenter.SPEED_TIMES
+      this.CocosAnim.getState('die').speed = EventCenter.SPEED_TIMES
+    }
   }
 
   private onTriggerStay(event: ITriggerEvent) {
     this.monsterInfo.hp -= 1
     if (this.monsterInfo.hp > 0 || this.monsterInfo.hp < 0) return
     this.collider.off('onTriggerStay', this.onTriggerStay, this)
-    console.log(event)
     this.CocosAnim.play('die')
-    this.node
-      .getParent()
-      .getComponent(GameManager)
-      .addGold(this.monsterInfo.price)
+    // this.node
+    //   .getParent()
+    //   .getComponent(GameManager)
+    //   .addGold(this.monsterInfo.price)
+    EventCenter.GOLD += this.monsterInfo.price
+    EventCenter.emit(EventCenter.GOLD_CHANGE, EventCenter.GOLD)
     setTimeout(() => {
       if (this.node) this.node.destroy()
     }, this.CocosAnim.getState('die').duration * 900)
@@ -161,7 +167,8 @@ export class MonsterController extends Component {
   }
   update(deltaTime: number) {
     if (this.monsterInfo.hp == 0) return
-    if (this.gameState == GameState.SPEED) deltaTime += deltaTime
+    if (GameState.STATE == GameState.SPEED)
+      deltaTime = deltaTime * EventCenter.SPEED_TIMES
     if (this._startJump) {
       this._curJumpTime += deltaTime
       if (this._curJumpTime > this._curRoadTime) {
