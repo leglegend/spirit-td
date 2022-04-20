@@ -76,11 +76,6 @@ export class Player extends Component {
   start() {
     this.audioSource = this.node.getComponent(AudioSource)
     this.animation = this.node.getComponent(Animation)
-    this.range = this.node.getChildByName('range')
-    let scale = this.range.getScale()
-    scale.x = (this.attackRange / 5) * scale.x
-    scale.z = (this.attackRange / 5) * scale.z
-    this.range.setScale(scale)
 
     this.collider = this.node.getChildByName('area').getComponent(Collider)
     this.collider.setGroup(2)
@@ -100,6 +95,12 @@ export class Player extends Component {
 
   public setData(data) {
     this.data = Object.assign({}, data)
+    this.attackRange = data.range
+    this.range = this.node.getChildByName('range')
+    let scale = this.range.getScale()
+    scale.x = (this.attackRange / 5) * scale.x
+    scale.z = (this.attackRange / 5) * scale.z
+    this.range.setScale(scale)
   }
 
   public begin() {
@@ -151,7 +152,8 @@ export class Player extends Component {
     if (
       this.playerState == PlayerState.PLACE ||
       this.playerState == PlayerState.ATTACKED ||
-      !this.gameManager.children
+      !this.gameManager.children ||
+      !this.gameManager.children.length
     )
       return
     let lastMonster = null
@@ -160,12 +162,22 @@ export class Player extends Component {
     for (let monster of this.gameManager.children) {
       let dis = calcDis(monster, this._curPos)
       let msCtr = monster.getComponent(MonsterController)
-      if (dis < 3 && msCtr.HP > 0 && this.lastMonster == monster) {
+      if (
+        dis < this.attackRange &&
+        msCtr.monsterInfo.hp > 0 &&
+        this.lastMonster == monster
+      ) {
         lastMonster = monster
         break
       }
-      if (dis < 3 && msCtr.HP > 0 && (lessLong == null || lessLong > dis))
+      if (
+        dis < this.attackRange &&
+        msCtr.monsterInfo.hp > 0 &&
+        (lessLong == null || lessLong > dis)
+      ) {
         lastMonster = monster
+        lessLong = dis
+      }
     }
 
     if (lastMonster) {

@@ -52,7 +52,7 @@ export class MonsterController extends Component {
 
   private isDie: boolean = false
 
-  private monsterInfo = {
+  public monsterInfo = {
     name: '',
     hp: 0,
     speed: 0,

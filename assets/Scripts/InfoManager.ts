@@ -129,6 +129,8 @@ export class InfoManager extends Component {
     }
   }
 
+  setSkillInfo(plane) {}
+
   getFirstPlayer(event) {
     const touch = event.touch!
     this.cameraCom.screenPointToRay(

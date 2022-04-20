@@ -204,8 +204,7 @@
       "imported": true,
       "files": [
         ".jpg",
-        ".json",
-        ".png"
+        ".json"
       ],
       "subMetas": {}
     },
