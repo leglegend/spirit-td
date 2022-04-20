@@ -8620,20 +8620,11 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "gameManager": {
-      "__id__": 12
-    },
     "rightMenu": {
       "__id__": 162
     },
     "leftMenu": {
       "__id__": 200
-    },
-    "background": {
-      "__id__": 7
-    },
-    "rightPlane": {
-      "__id__": 195
     },
     "playerBox": {
       "__id__": 168
