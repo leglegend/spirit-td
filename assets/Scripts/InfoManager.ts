@@ -64,7 +64,7 @@ export class InfoManager extends Component {
           if (this.lastPlayer && this.lastPlayer != this.currentPlayer)
             this.lastPlayer.getComponent(Player).showRange(false)
           this.currentPlayer.getComponent(Player).showRange(true)
-          this.showPlayerInfo(this.currentPlayer.getComponent(Player).data)
+          this.setPlayerInfo(this.currentPlayer.getComponent(Player).data)
           this.showInfo()
         } else if (this.lastPlayer) {
           this.lastPlayer.getComponent(Player).showRange(false)
@@ -112,7 +112,7 @@ export class InfoManager extends Component {
     this.lastPlayer = null
   }
 
-  showPlayerInfo(data) {
+  setPlayerInfo(data) {
     this.PlayerName.string = data.label
     this.PlayerInfo.string = data.description
     let that = this
@@ -123,6 +123,10 @@ export class InfoManager extends Component {
       spriteFrame.texture = texture
       that.PlayerDraw.spriteFrame = spriteFrame
     })
+    if (data.skills && data.skills.length) {
+    }
+    if (data.learned_skills && data.learned_skills.length) {
+    }
   }
 
   getFirstPlayer(event) {
