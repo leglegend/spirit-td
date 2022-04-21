@@ -191,6 +191,23 @@
         "jointsLength": 1
       }
     },
+    "e94f1": {
+      "importer": "gltf-embeded-image",
+      "uuid": "e3553cad-2f15-4293-859a-8f43c780f289@e94f1",
+      "displayName": "",
+      "id": "e94f1",
+      "name": "shield.jpg.image",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.3",
+      "imported": true,
+      "files": [
+        ".jpg",
+        ".json"
+      ],
+      "subMetas": {}
+    },
     "f3caa": {
       "importer": "texture",
       "uuid": "e3553cad-2f15-4293-859a-8f43c780f289@f3caa",
@@ -229,8 +246,8 @@
         "mipfilter": "none",
         "premultiplyAlpha": false,
         "anisotropy": 0,
-        "isUuid": false,
-        "imageUuidOrDatabaseUri": "db://assets/Home/shield.jpg"
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "e3553cad-2f15-4293-859a-8f43c780f289@e94f1"
       },
       "ver": "1.0.21",
       "imported": true,
@@ -263,8 +280,8 @@
         "uri": "db://assets/Home/soldier.png"
       },
       {
-        "name": "shield",
-        "uri": "db://assets/Home/shield.jpg"
+        "name": "shield.jpg",
+        "uri": "e3553cad-2f15-4293-859a-8f43c780f289@e94f1"
       }
     ],
     "redirect": "e3553cad-2f15-4293-859a-8f43c780f289@d252c",

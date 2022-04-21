@@ -77,7 +77,7 @@ export class Player extends Component {
     this.audioSource = this.node.getComponent(AudioSource)
     this.animation = this.node.getComponent(Animation)
 
-    this.collider = this.node.getChildByName('area').getComponent(Collider)
+    this.collider = this.node.children[0].getComponent(Collider)
     this.collider.setGroup(2)
     this.collider.setMask(3)
     this.collider.on('onTriggerEnter', this.onTriggerEnter, this)
@@ -237,7 +237,7 @@ export class Player extends Component {
 
   beginAttack() {
     this.attackTime = 0
-    this.audioSource.playOneShot(this.bow, 0.5)
+    if (this.bow) this.audioSource.playOneShot(this.bow, 0.5)
     this.schedule(
       this.doAttack,
       this.getAnimationTime(PlayerState.ATTACKING) / 1000,
@@ -255,7 +255,7 @@ export class Player extends Component {
     this.audioSource.playOneShot(this.arrow, 1)
     setTimeout(
       function () {
-        this.audioSource.playOneShot(this.bow, 0.5)
+        if (this.bow) this.audioSource.playOneShot(this.bow, 0.5)
       }.bind(this),
       this.getAnimationTime(PlayerState.ATTACKING) / 3
     )

@@ -22,6 +22,12 @@ export class InfoManager extends Component {
   private mainPlane: Node | null = null
   @property({ type: Node })
   private infoPlane: Node | null = null
+  @property({ type: Node })
+  private skillTop: Node | null = null
+  @property({ type: Node })
+  private skillBottom: Node | null = null
+  @property({ type: Node })
+  private skillAlready: Node | null = null
   @property(Camera)
   public cameraCom!: Camera
 
@@ -43,6 +49,7 @@ export class InfoManager extends Component {
     this.infoPlane.getComponent(Widget).isAlignRight = true
     this.infoPlane.getComponent(Widget).isAlignLeft = false
     this.infoPlane.getComponent(Widget).right = -50
+    this.infoPlane.on(Node.EventType.TOUCH_START, (e) => {})
     this.onMainPlaneTouch()
   }
 
@@ -124,12 +131,34 @@ export class InfoManager extends Component {
       that.PlayerDraw.spriteFrame = spriteFrame
     })
     if (data.skills && data.skills.length) {
+      if (!data.level) data.level = 0
+      this.setSkillInfo(this.skillTop, data.skills[data.level])
+      this.setSkillInfo(this.skillBottom, data.skills[data.level + 1])
     }
     if (data.learned_skills && data.learned_skills.length) {
     }
   }
 
-  setSkillInfo(plane) {}
+  setSkillInfo(plane, data) {
+    plane.getChildByName('SkillText').getComponent(Label).string =
+      data.description
+    plane
+      .getChildByName('UpgradeBtn')
+      .getChildByName('Label')
+      .getComponent(Label).string = '$' + data.price
+    assetManager.loadRemote<ImageAsset>(data.image, function (err, imageAsset) {
+      const spriteFrame = new SpriteFrame()
+      const texture = new Texture2D()
+      texture.image = imageAsset
+      spriteFrame.texture = texture
+      plane.getChildByName('SkillIcon').getComponent(Sprite).spriteFrame =
+        spriteFrame
+    })
+  }
+
+  updateSkill(event) {
+    console.log(event)
+  }
 
   getFirstPlayer(event) {
     const touch = event.touch!
