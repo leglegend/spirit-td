@@ -12,9 +12,11 @@ import {
   Sprite,
   Label,
   Widget,
-  Animation
+  Animation,
+  Color
 } from 'cc'
 import { Player } from './Player'
+import { EventCenter } from './utils/EventCenter'
 const { ccclass, property } = _decorator
 @ccclass('InfoManager')
 export class InfoManager extends Component {
@@ -120,6 +122,7 @@ export class InfoManager extends Component {
   }
 
   setPlayerInfo(data) {
+    console.log(data)
     this.PlayerName.string = data.label
     this.PlayerInfo.string = data.description
     let that = this
@@ -132,11 +135,34 @@ export class InfoManager extends Component {
     })
     if (data.skills && data.skills.length) {
       if (!data.level) data.level = 0
-      this.setSkillInfo(this.skillTop, data.skills[data.level])
-      this.setSkillInfo(this.skillBottom, data.skills[data.level + 1])
+      if (data.level * 2 + 1 >= data.skills.length) {
+        this.setSkillInfo(this.skillTop, data.skills[data.skills.length - 2])
+        this.setSkillInfo(this.skillBottom, data.skills[data.skills.length - 1])
+      } else {
+        this.setSkillInfo(this.skillTop, data.skills[data.level * 2])
+        this.setSkillInfo(this.skillBottom, data.skills[data.level * 2 + 1])
+      }
     }
-    if (data.learned_skills && data.learned_skills.length) {
+    if (!data.learned_skills) {
+      data.learned_skills = []
+      data.top_skills = [0, 0, 0, 0]
+      data.bottom_skills = [0, 0, 0, 0]
     }
+    for (let i = 0; i < data.skills.length; i++) {
+      if (!data.skills[i].learn_type) data.skills[i].learn_type = 0
+      if (i % 2 == 0) {
+        this.setSkillPoint(this.skillTop, data.skills[i], i / 2 + 1)
+      } else {
+        this.setSkillPoint(this.skillBottom, data.skills[i], (i - 1) / 2 + 1)
+      }
+    }
+    for (let i = 0; i < data.top_skills.length; i++) {
+      this.setSkillPoint(this.skillTop, data.top_skills[i], i + 1)
+    }
+    for (let i = 0; i < data.bottom_skills.length; i++) {
+      this.setSkillPoint(this.skillBottom, data.bottom_skills[i], i + 1)
+    }
+    this.setLearnedSkillInfo(data.learned_skills)
   }
 
   setSkillInfo(plane, data) {
@@ -156,8 +182,52 @@ export class InfoManager extends Component {
     })
   }
 
-  updateSkill(event) {
-    console.log(event)
+  setSkillPoint(plane, learn_type, index) {
+    let point = plane.getChildByName('Skill-' + index).getComponent(Sprite)
+    if (learn_type == 1) {
+      point.color = new Color('#2BD153')
+    } else if (learn_type == -1) {
+      point.color = new Color('#ff3141')
+    } else {
+      point.color = new Color('#000000')
+    }
+  }
+
+  setLearnedSkillInfo(skills) {
+    for (let skill of this.skillAlready.children) {
+      skill.getChildByName('Sprite').getComponent(Sprite).spriteFrame = null
+    }
+    for (let i = 0; i < skills.length; i++) {
+      let skillBox = this.skillAlready.children[i].getChildByName('Sprite')
+      assetManager.loadRemote<ImageAsset>(
+        skills[i].image,
+        function (err, imageAsset) {
+          const spriteFrame = new SpriteFrame()
+          const texture = new Texture2D()
+          texture.image = imageAsset
+          spriteFrame.texture = texture
+          skillBox.getComponent(Sprite).spriteFrame = spriteFrame
+        }
+      )
+    }
+  }
+
+  updateSkill(event, type) {
+    let data = this.currentPlayer.getComponent(Player).data
+    let skill = data.skills[data.level * 2 + (type == 'top' ? 0 : 1)]
+    if (!skill) return
+    if (data.level >= 4) return
+    if (EventCenter.GOLD < skill.price) return
+    skill.learn_type = 1
+    data.skills[data.level * 2 + (type == 'top' ? 1 : 0)].learn_type = -1
+    data.learned_skills.push(skill)
+    data.top_skills[data.level] = type == 'top' ? 1 : -1
+    data.bottom_skills[data.level] = type == 'top' ? -1 : 1
+    data.level += 1
+    EventCenter.GOLD -= skill.price
+    EventCenter.emit(EventCenter.GOLD_CHANGE, EventCenter.GOLD)
+    this.setPlayerInfo(data)
+    this.setLearnedSkillInfo(data.learned_skills)
   }
 
   getFirstPlayer(event) {
