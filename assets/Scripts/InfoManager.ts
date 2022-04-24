@@ -228,6 +228,7 @@ export class InfoManager extends Component {
     EventCenter.emit(EventCenter.GOLD_CHANGE, EventCenter.GOLD)
     this.setPlayerInfo(data)
     this.setLearnedSkillInfo(data.learned_skills)
+    this.currentPlayer.getComponent(Player).updateSkill()
   }
 
   getFirstPlayer(event) {

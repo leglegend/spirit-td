@@ -98,8 +98,8 @@ export class Player extends Component {
     this.attackRange = data.range
     this.range = this.node.getChildByName('range')
     let scale = this.range.getScale()
-    scale.x = (this.attackRange / 5) * scale.x
-    scale.z = (this.attackRange / 5) * scale.z
+    scale.x = this.attackRange / 5
+    scale.z = (this.attackRange / 5) * 0.8
     this.range.setScale(scale)
   }
 
@@ -129,6 +129,35 @@ export class Player extends Component {
     let rangePos = this.node.getChildByName('range').getPosition()
     rangePos.y = isShow ? 0.1 : -0.1
     this.node.getChildByName('range').setPosition(rangePos)
+  }
+
+  updateSkill() {
+    let data = this.data
+    for (let skill of this.data.learned_skills) {
+      if (skill.name == 'range') {
+        // 扩大攻击范围
+        this.attackRange = data.range * skill.value
+        this.range = this.node.getChildByName('range')
+        let scale = this.range.getScale()
+        scale.x = this.attackRange / 5
+        scale.z = (this.attackRange / 5) * 0.8
+        this.range.setScale(scale)
+      } else if (skill.name == 'speed') {
+        // 增加攻击速度
+      } else if (skill.name == 'attack') {
+        // 增加攻击力
+      } else if (skill.name == 'boom') {
+        // 技能附带爆炸效果
+      } else if (skill.name == 'ice') {
+        // 命中后附带冰冻效果
+      } else if (skill.name == 'defense') {
+        // 破防
+      } else if (skill.name == 'coiled') {
+        // 连续发射子弹
+      } else if (skill.name == 'instant') {
+        // 秒杀
+      }
+    }
   }
 
   canSpace(can) {
