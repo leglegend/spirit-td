@@ -1,11 +1,8 @@
-# OrcsTd
-
+# 精灵塔防
+#### 体验地址
+[点击进入](https://static-5afd7a04-9817-4b73-8f96-96fba1ee24c9.bspapp.com/game/)
 #### 介绍
-兽人塔防
-
-#### 软件架构
-软件架构说明
-
+一款基于CocosCreater的塔防游戏，可以编译为H5和小程序。
 
 #### 安装教程
 
@@ -19,10 +16,5 @@
 2.  xxxx
 3.  xxxx
 
-#### 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
 
