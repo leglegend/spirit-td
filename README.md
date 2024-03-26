@@ -17,8 +17,8 @@
 #### 游戏展示
 ![游戏截图](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27b73d28753243cfaa8e281e71dbff50~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
 ![游戏截图](https://p5.ssl.qhimg.com/t01693eaa33512a329d.webp)
-![游戏截图](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-5afd7a04-9817-4b73-8f96-96fba1ee24c9/042bde17-51d2-4207-9bb2-2ac454912532.jpg)
-![后台系统](https://vkceyugu.cdn.bspapp.com/VKCEYUGU-5afd7a04-9817-4b73-8f96-96fba1ee24c9/a9dc6b0e-071d-40f8-a081-22acd8c9c759.png)
+![游戏截图](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/60b5597284aa43769055b6087f001749~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
+![后台系统](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6166ea229f87406e9fe646fca0dd55e0~tplv-k3u1fbpfcp-zoom-in-crop-mark:1512:0:0:0.awebp?)
 
 
 
